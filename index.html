@@ -80,15 +80,15 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
 .b-unsafe{background:linear-gradient(90deg,#dc2626,#ef4444);box-shadow:0 0 8px rgba(239,68,68,.5)}
 
 /* SCENARIO + CHOICES */
-#scen-card{position:absolute;left:50%;transform:translateX(-50%);bottom:225px;background:var(--bg-glass2);backdrop-filter:blur(26px);border:1px solid var(--bord);border-radius:20px;padding:1.2rem 1.6rem;max-width:600px;width:92%;text-align:center;pointer-events:none;z-index:4;animation:sUp .5s cubic-bezier(.4,0,.2,1)}
-@keyframes sUp{from{opacity:0;transform:translate(-50%,18px)}to{opacity:1;transform:translate(-50%,0)}}
+#scen-card{position:absolute;left:1.25rem;top:8.2rem;background:var(--bg-glass2);backdrop-filter:blur(26px);border:1px solid var(--bord);border-radius:18px;padding:1.05rem 1.25rem;max-width:330px;width:min(330px,44vw);text-align:left;pointer-events:none;z-index:4;animation:sUp .5s cubic-bezier(.4,0,.2,1);transition:opacity .3s;border-left:3px solid var(--acc)}
+@keyframes sUp{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
 .sc-num{font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:var(--txd);margin-bottom:.5rem;font-weight:600}
 .sc-sit{font-size:.9rem;line-height:1.5;margin-bottom:.5rem;color:rgba(255,255,255,.92)}
 .sc-q{font-size:.78rem;font-weight:600;color:var(--txm)}
-#dots{position:absolute;bottom:203px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:4}
+#dots{position:absolute;left:1.4rem;top:7.55rem;display:flex;gap:5px;z-index:4;transition:opacity .3s}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);transition:all .3s}
 .dot.done{background:#22c55e}.dot.cur{background:#fff;transform:scale(1.35);box-shadow:0 0 8px rgba(255,255,255,.6)}
-#choices{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);display:flex;gap:.65rem;flex-wrap:wrap;justify-content:center;max-width:700px;width:96%;z-index:4}
+#choices{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;max-width:min(640px,calc(100vw - 320px));width:100%;z-index:4;transition:opacity .3s}
 .ch-btn{flex:1;min-width:155px;padding:13px 16px;border-radius:15px;border:1.5px solid var(--bord2);background:var(--bg-glass);backdrop-filter:blur(16px);color:#fff;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;pointer-events:all;line-height:1.35;font-family:inherit}
 .ch-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);transform:translateY(-3px);box-shadow:0 8px 26px rgba(0,0,0,.35)}
 .ch-btn.correct{background:rgba(34,197,94,.28);border-color:#22c55e;pointer-events:none;box-shadow:0 0 22px rgba(34,197,94,.4)}
@@ -178,13 +178,29 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
 #back-btn{position:absolute;top:1rem;right:1.25rem;background:var(--bg-glass);backdrop-filter:blur(16px);border:1px solid var(--bord);color:#fff;padding:7px 13px;border-radius:22px;font-size:.72rem;font-weight:500;cursor:pointer;pointer-events:all;transition:all .15s;font-family:inherit;z-index:7}
 #back-btn:hover{background:rgba(255,255,255,.15)}
 #trans{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:990;transition:opacity .4s}
+#ui.uidim #scen-card,#ui.uidim #params-panel,#ui.uidim #choices,#ui.uidim #dots,#ui.uidim #pagasa-alert{opacity:.14}
+/* Cinematic letterbox during control phase */
+.lbx{position:fixed;left:0;right:0;height:0;background:#000;z-index:20;transition:height .6s cubic-bezier(.4,0,.2,1);pointer-events:none}
+#lbx-t{top:0}#lbx-b{bottom:0}
+body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
+/* Lightning flash overlay */
+#flash{position:fixed;inset:0;background:#dfe9ff;opacity:0;pointer-events:none;z-index:8;transition:opacity .06s}
+/* Stability meter */
+.m-stab{width:180px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin:.45rem auto 0;overflow:hidden;display:none}
+.m-stab.on{display:block}
+#m-stab-fill{height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);transition:width .15s}
+/* Stumble toast */
+#stumble{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);background:rgba(80,10,10,.85);backdrop-filter:blur(14px);border:1.5px solid #ef4444;border-radius:14px;padding:.75rem 1.4rem;font-size:.88rem;font-weight:700;display:none;z-index:6;animation:stumbleIn .3s}
+@keyframes stumbleIn{from{transform:translate(-50%,-30%);opacity:0}to{transform:translate(-50%,-50%);opacity:1}}
 #tutorial{position:absolute;left:50%;bottom:260px;transform:translateX(-50%);background:var(--bg-glass2);backdrop-filter:blur(14px);border:1px solid var(--bord);border-radius:13px;padding:9px 15px;font-size:.74rem;color:var(--txm);pointer-events:none;display:none;z-index:5;animation:tFade 3s ease-in-out infinite}
 @keyframes tFade{0%,100%{opacity:.7}50%{opacity:1}}
 
 @media(max-width:520px){
   .grade-grid{gap:.65rem}.g-card{padding:1rem .85rem;border-radius:17px}
   .g-num{font-size:1.9rem}.g-topic{font-size:.82rem}
-  #scen-card{padding:.9rem 1.1rem;bottom:198px}.sc-sit{font-size:.8rem}
+  #scen-card{padding:.8rem .95rem;top:7.6rem;max-width:60vw}.sc-sit{font-size:.76rem}
+  #dots{top:7rem}
+  #choices{max-width:calc(100vw - 1rem);bottom:10.2rem}
   .ch-btn{min-width:125px;font-size:.75rem;padding:10px 11px}
   #params-panel{top:100px;right:.65rem;padding:.65rem .75rem;min-width:155px}
   #joy-zone{width:112px;height:112px;left:.65rem;bottom:.65rem}
@@ -193,8 +209,8 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
   .fb-card{padding:1.4rem 1.3rem 1.1rem}.fbv-t{font-size:1.1rem}
 }
 @media(max-height:620px){
-  #scen-card{bottom:172px;padding:.75rem 1.2rem}.sc-sit{font-size:.76rem}
-  #dots{bottom:152px}#choices{bottom:92px}
+  #scen-card{top:6.8rem;padding:.7rem .95rem}.sc-sit{font-size:.74rem}
+  #dots{top:6.3rem}
 }
 </style>
 </head>
@@ -265,7 +281,9 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
       <div class="m-eyebrow">🎮 Simulation Control Active</div>
       <div class="m-text" id="m-text">Steer to the gateway</div>
       <div class="m-dist">▸ <span id="m-dist">–</span> to gateway · joystick to move</div>
+      <div class="m-stab" id="m-stab"><div id="m-stab-fill"></div></div>
     </div>
+    <div id="stumble">⚠ Swept off balance! Pushed back — steady yourself.</div>
 
     <div id="gate-prompt">
       <div class="gp-title">⬡ Level Gateway ⬡</div>
@@ -297,6 +315,7 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
       <button class="act-btn" id="zoom-in" title="Zoom in">+</button>
       <button class="act-btn" id="zoom-out" title="Zoom out">−</button>
       <button class="act-btn" id="cam-reset" title="Reset view">⌂</button>
+      <button class="act-btn" id="snd-btn" title="Sound on/off">🔊</button>
     </div>
 
     <div id="fb-wrap">
@@ -334,6 +353,8 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
     </div>
   </div>
 </div>
+<div id="lbx-t" class="lbx"></div><div id="lbx-b" class="lbx"></div>
+<div id="flash"></div>
 <div id="trans"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -397,6 +418,242 @@ const GRADES = {
 
 'use strict';
 // ═══════════════════════════════════════════════
+//  AUDIO SYSTEM — fully procedural WebAudio (no assets)
+// ═══════════════════════════════════════════════
+const AudioSys = {
+  ctx:null, master:null, amb:[], humNode:null, enabled:true, _nb:null,
+  init(){
+    if(this.ctx) return;
+    try{
+      this.ctx = new (window.AudioContext||window.webkitAudioContext)();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = .5;
+      this.master.connect(this.ctx.destination);
+    }catch(e){}
+  },
+  resume(){ if(this.ctx && this.ctx.state==='suspended') this.ctx.resume(); },
+  noiseBuf(){
+    if(this._nb) return this._nb;
+    const b = this.ctx.createBuffer(1, this.ctx.sampleRate*2, this.ctx.sampleRate);
+    const d = b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+    this._nb = b; return b;
+  },
+  stopAmb(){
+    this.amb.forEach(a=>{ try{a.stop()}catch(e){} });
+    this.amb = [];
+    this.hum(false);
+  },
+  ambient(kind, level){
+    if(!this.ctx || !this.enabled) return;
+    const src = this.ctx.createBufferSource();
+    src.buffer = this.noiseBuf(); src.loop = true;
+    const f = this.ctx.createBiquadFilter();
+    const g = this.ctx.createGain();
+    if(kind==='rain'){ f.type='highpass'; f.frequency.value=1400; g.gain.value=Math.min(.22,.05+level*.004); }
+    else if(kind==='wind'){ f.type='bandpass'; f.frequency.value=380+level*3; f.Q.value=.7; g.gain.value=Math.min(.26,.04+level*.002); }
+    else { f.type='lowpass'; f.frequency.value=480; g.gain.value=.055; } // water lap
+    src.connect(f); f.connect(g); g.connect(this.master); src.start();
+    if(kind!=='rain'){ // slow gust/lap LFO
+      const lfo = this.ctx.createOscillator(), lg = this.ctx.createGain();
+      lfo.frequency.value = kind==='wind'?.16:.3;
+      lg.gain.value = g.gain.value*.55;
+      lfo.connect(lg); lg.connect(g.gain); lfo.start();
+      this.amb.push({stop:()=>{lfo.stop();src.stop();}});
+    } else this.amb.push({stop:()=>src.stop()});
+  },
+  hum(on){
+    if(!this.ctx || !this.enabled) return;
+    if(on && !this.humNode){
+      const o1 = this.ctx.createOscillator(), o2 = this.ctx.createOscillator();
+      o1.type='sine'; o1.frequency.value=108; o2.type='sine'; o2.frequency.value=112;
+      const g = this.ctx.createGain(); g.gain.value=.028;
+      o1.connect(g); o2.connect(g); g.connect(this.master);
+      o1.start(); o2.start();
+      this.humNode = {stop:()=>{try{o1.stop();o2.stop();}catch(e){}}};
+    } else if(!on && this.humNode){ this.humNode.stop(); this.humNode=null; }
+  },
+  tone(freq, dur, type, vol){
+    if(!this.ctx || !this.enabled) return;
+    const o = this.ctx.createOscillator();
+    o.type = type||'sine'; o.frequency.value = freq;
+    const g = this.ctx.createGain();
+    const t = this.ctx.currentTime;
+    g.gain.setValueAtTime(vol||.13, t);
+    g.gain.exponentialRampToValueAtTime(.001, t+dur);
+    o.connect(g); g.connect(this.master);
+    o.start(); o.stop(t+dur+.02);
+  },
+  correct(){ this.tone(660,.14); setTimeout(()=>this.tone(880,.28),120); },
+  wrong(){ this.tone(196,.32,'sawtooth',.07); },
+  click(){ this.tone(520,.045,'square',.035); },
+  step(inWater){ this.tone(inWater?170:110, .05, 'triangle', inWater?.06:.035); },
+  splashS(){ if(!this.ctx||!this.enabled)return;
+    const s=this.ctx.createBufferSource(); s.buffer=this.noiseBuf();
+    const f=this.ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=900;
+    const g=this.ctx.createGain(); const t=this.ctx.currentTime;
+    g.gain.setValueAtTime(.09,t); g.gain.exponentialRampToValueAtTime(.001,t+.25);
+    s.connect(f);f.connect(g);g.connect(this.master); s.start(); s.stop(t+.3); },
+  thunder(){
+    if(!this.ctx || !this.enabled) return;
+    const s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf();
+    const f = this.ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=110;
+    const g = this.ctx.createGain(); const t = this.ctx.currentTime;
+    g.gain.setValueAtTime(.55, t);
+    g.gain.exponentialRampToValueAtTime(.001, t+2.4);
+    s.connect(f); f.connect(g); g.connect(this.master);
+    s.start(); s.stop(t+2.5);
+  },
+  pass(){ this.tone(523,.15); setTimeout(()=>this.tone(659,.15),130); setTimeout(()=>this.tone(784,.42),260); },
+  stumble(){ this.tone(150,.2,'sawtooth',.09); setTimeout(()=>this.tone(110,.3,'sawtooth',.08),150); }
+};
+
+// ═══════════════════════════════════════════════
+//  CINEMATIC FX
+// ═══════════════════════════════════════════════
+function radialTex(key, inner, outer){
+  if(texCache[key]) return texCache[key];
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+  const c = cv.getContext('2d');
+  const gr = c.createRadialGradient(64,64,4,64,64,64);
+  gr.addColorStop(0, inner); gr.addColorStop(1, outer);
+  c.fillStyle = gr; c.fillRect(0,0,128,128);
+  const tx = new THREE.CanvasTexture(cv);
+  texCache[key] = tx; return tx;
+}
+
+// Soft contact shadow under characters (ambient-occlusion feel)
+function blobShadow(r){
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(r*2, r*2),
+    new THREE.MeshBasicMaterial({ map: radialTex('blob','rgba(0,0,0,.42)','rgba(0,0,0,0)'), transparent:true, depthWrite:false })
+  );
+  m.rotation.x = -Math.PI/2;
+  m.position.y = .015;
+  return m;
+}
+
+// Volumetric-style billboard clouds
+function addClouds(count, dark){
+  const tx = radialTex(dark?'cloudD':'cloudL',
+    dark?'rgba(90,100,115,.85)':'rgba(255,255,255,.9)',
+    dark?'rgba(90,100,115,0)':'rgba(255,255,255,0)');
+  for(let i=0;i<count;i++){
+    const w = 18+Math.random()*26;
+    const cl = new THREE.Mesh(new THREE.PlaneGeometry(w, w*.4),
+      new THREE.MeshBasicMaterial({ map:tx, transparent:true, opacity:.5+Math.random()*.35, depthWrite:false, side:THREE.DoubleSide }));
+    cl.position.set((Math.random()-.5)*160, 26+Math.random()*22, (Math.random()-.5)*160);
+    scene.add(cl);
+    const spd = .3+Math.random()*.5;
+    animCallbacks.push((t,dt)=>{
+      cl.position.x += spd*dt*(1+G10Wind*.01);
+      if(cl.position.x > 90) cl.position.x = -90;
+      cl.lookAt(camera.position.x, cl.position.y, camera.position.z);
+    });
+  }
+}
+
+// Storm lightning: screen flash + exposure spike + delayed thunder
+function initLightning(){
+  let next = 3+Math.random()*6;
+  let flashT = -1;
+  const fd = document.getElementById('flash');
+  animCallbacks.push((t,dt)=>{
+    next -= dt;
+    if(next <= 0){
+      next = 4+Math.random()*8;
+      flashT = 0;
+      if(fd) fd.style.opacity = '.75';
+      renderer.toneMappingExposure = 2.2;
+      setTimeout(()=>AudioSys.thunder(), 300+Math.random()*900);
+    }
+    if(flashT >= 0){
+      flashT += dt;
+      const k = Math.max(0, 1-flashT*5);
+      if(fd) fd.style.opacity = (k*.75).toFixed(2);
+      renderer.toneMappingExposure = 1.12 + k*1.1;
+      if(k<=0) flashT = -1;
+    }
+  });
+}
+
+// Birds crossing the sky (fair weather ambience)
+function addBirds(n){
+  for(let i=0;i<n;i++){
+    const b = new THREE.Group();
+    const wm = new THREE.MeshBasicMaterial({color:0x1a1a22, side:THREE.DoubleSide});
+    const w1 = new THREE.Mesh(new THREE.PlaneGeometry(.5,.12), wm);
+    const w2 = w1.clone();
+    w1.position.x = -.25; w2.position.x = .25;
+    b.add(w1,w2);
+    b.position.set((Math.random()-.5)*60, 14+Math.random()*8, (Math.random()-.5)*60);
+    scene.add(b);
+    const spd = 2+Math.random()*2, ph = Math.random()*6.28;
+    animCallbacks.push((t,dt)=>{
+      b.position.x += spd*dt;
+      if(b.position.x>50) b.position.x = -50;
+      w1.rotation.z = Math.sin(t*9+ph)*.55;
+      w2.rotation.z = -Math.sin(t*9+ph)*.55;
+    });
+  }
+}
+
+// NPC villagers evacuating toward high ground (waypoint AI)
+function addVillagers(count, waterY){
+  const cols = [0x9a3412, 0x3730a3, 0x14532d, 0x86198f];
+  for(let i=0;i<count;i++){
+    const startZ = 2 - i*3.5, side = i%2?1:-1;
+    const v = makeHuman(side*(2.5+Math.random()*1.5), waterY, startZ, cols[i%4], 0x27272a, .92);
+    v.userData.baseY = waterY;
+    v.add(blobShadow(.5));
+    scene.add(v);
+    const target = new THREE.Vector3(side*5, waterY, -13.5);
+    animCallbacks.push((t,dt)=>{
+      const d = new THREE.Vector3().subVectors(target, v.position); d.y = 0;
+      const dist = d.length();
+      if(dist > .6){
+        d.normalize();
+        v.position.addScaledVector(d, .85*dt);
+        v.rotation.y = Math.atan2(d.x, d.z);
+        v.userData.moving = true;
+      } else v.userData.moving = false;
+    });
+  }
+}
+
+// Reusable water splash rings (spawned at moving feet / boat wake)
+function makeSplashPool(){
+  const pool = [];
+  const tx = radialTex('splash','rgba(230,245,255,.85)','rgba(230,245,255,0)');
+  for(let i=0;i<10;i++){
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(.5,.5),
+      new THREE.MeshBasicMaterial({map:tx, transparent:true, opacity:0, depthWrite:false}));
+    m.rotation.x = -Math.PI/2;
+    m.userData.life = -1;
+    scene.add(m); pool.push(m);
+  }
+  animCallbacks.push((t,dt)=>{
+    pool.forEach(m=>{
+      if(m.userData.life >= 0){
+        m.userData.life += dt;
+        const k = m.userData.life/.6;
+        if(k >= 1){ m.userData.life = -1; m.material.opacity = 0; }
+        else { m.material.opacity = .7*(1-k); m.scale.setScalar(.5+k*2.2); }
+      }
+    });
+  });
+  return {
+    spawn(x,y,z){
+      const m = pool.find(p=>p.userData.life<0);
+      if(!m) return;
+      m.position.set(x,y,z);
+      m.userData.life = 0; m.scale.setScalar(.5);
+    }
+  };
+}
+
+'use strict';
+// ═══════════════════════════════════════════════
 //  ULTRA ENGINE — cinematic renderer + physics scenes
 // ═══════════════════════════════════════════════
 let renderer, scene, camera, clock;
@@ -408,7 +665,7 @@ let cam = { base: new THREE.Vector3(0,6,-15), target: new THREE.Vector3(0,6,-15)
 let joy = { x:0, y:0, active:false };
 let zoomLevel = 1, G10Wind = 0;
 let texCache = {};
-let ctrl = { on:false, done:false, subject:null, scen:null, grade:0, proceed:true, camOff:new THREE.Vector3() };
+let ctrl = { on:false, done:false, subject:null, scen:null, grade:0, proceed:true, camOff:new THREE.Vector3(), vel:new THREE.Vector3(), stab:0, splash:null, stepT:0, startPos:new THREE.Vector3() };
 let boatDyn = { tilt:.04, off:0, shift:false, sink:.05 };
 
 function initThree(){
@@ -447,13 +704,19 @@ function animate(){
     const wp = new THREE.Vector3();
     if(ctrl.subject){
       ctrl.subject.getWorldPosition(wp);
-      cam.look.lerp(new THREE.Vector3(wp.x, wp.y+1.2, wp.z), .1);
+      // Look-ahead: camera anticipates movement direction
+      const ahead = new THREE.Vector3(wp.x + ctrl.vel.x*.55, wp.y+1.2, wp.z + ctrl.vel.z*.55);
+      cam.look.lerp(ahead, .09);
       cam.target.copy(wp).add(ctrl.camOff);
     }
-    camera.position.lerp(cam.target, .06);
+    camera.position.lerp(cam.target, .055);
     camera.lookAt(cam.look);
+    // Subtle FOV kick with speed (cinematic momentum feel)
+    const spd = ctrl.vel.length();
+    camera.fov += ((55/zoomLevel + spd*1.6) - camera.fov) * .06;
   } else {
     // ── OBSERVE PHASE: joystick orbits camera around look-target ──
+    document.getElementById('ui').classList.toggle('uidim', joy.active);
     if(joy.active){
       cam.yaw += joy.x * dt * 1.4;
       cam.pitch += joy.y * dt * 0.9;
@@ -1015,6 +1278,16 @@ function buildFloodScene(scen, grade){
   gatewayGroup = makeGateway(0,2.3,13,0x38bdf8);
   scene.add(gatewayGroup);
 
+  // ── CINEMATIC LAYER ──
+  humanGroup.add(blobShadow(.55));
+  addClouds(mood==='sunny'?6:10, mood!=='sunny');
+  if(mood==='sunny') addBirds(3);
+  if(mood==='storm') initLightning();
+  if(depth < .55) addVillagers(2, cy);            // NPCs evacuating to high ground
+  AudioSys.stopAmb();
+  if(rmm>0 || depth>.4) AudioSys.ambient('rain', Math.max(10,rmm));
+  AudioSys.ambient('water', 1);
+
   cam.base.set(6,5,-13); cam.look.set(0,1.4,2);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
 }
@@ -1088,6 +1361,11 @@ function buildBoatScene(scen){
   gatewayGroup = makeGateway(9,2.3,0,0xa78bfa);
   gatewayGroup.rotation.y = Math.PI/2;
   scene.add(gatewayGroup);
+
+  addClouds(7, false);
+  addBirds(4);
+  AudioSys.stopAmb();
+  AudioSys.ambient('water', 1);
 
   cam.base.set(-7,4.5,-12); cam.look.set(0,.5,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
@@ -1201,6 +1479,14 @@ function buildBridgeScene(scen){
   gatewayGroup.rotation.y = Math.PI/2;
   scene.add(gatewayGroup);
 
+  humanGroup.add(blobShadow(.55));
+  addClouds(wind>50?11:6, wind>50);
+  if(wind<=40) addBirds(3);
+  if(wind>80) initLightning();
+  AudioSys.stopAmb();
+  AudioSys.ambient('wind', wind);
+  if(wind>60) AudioSys.ambient('rain', 20);
+
   cam.base.set(-12,5,-13); cam.look.set(0,.5,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
 }
@@ -1286,6 +1572,10 @@ function buildMenuBackground(){
   }
   rain = makeRain(2200,80,30,80,.5);
   scene.add(rain);
+  addClouds(8, false);
+  AudioSys.stopAmb();
+  AudioSys.ambient('rain', 8);
+  AudioSys.ambient('water', 1);
   cam.base.set(0,8,-25); cam.look.set(0,0,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
   animCallbacks.push((t)=>{
@@ -1335,6 +1625,12 @@ function startControl(){
   if(GS.grade===9) applyBoatCorrection(scen);
 
   ctrl.subject = GS.grade===9 ? boatGroup : humanGroup;
+  ctrl.vel.set(0,0,0); ctrl.stab = 0; ctrl.stepT = 0;
+  ctrl.startPos.copy(ctrl.subject.position);
+  ctrl.splash = makeSplashPool();
+  document.body.classList.add('cinema');       // letterbox bars
+  document.getElementById('m-stab').classList.remove('on');
+  AudioSys.hum(true);                          // gateway hum
 
   // Chase camera offsets per mode
   if(GS.grade===9) ctrl.camOff.set(-6, 4.5, -7);
@@ -1369,59 +1665,137 @@ function updateControl(dt, t){
   const gdist = fwd.length();
   if(gdist > .001) fwd.normalize();
   const right = new THREE.Vector3(-fwd.z, 0, fwd.x);
-  const mv = new THREE.Vector3().addScaledVector(fwd, joy.y).addScaledVector(right, joy.x);
-  const mag = mv.length();
-  const moving = mag > .12;
-  if(humanGroup && humanGroup.userData) humanGroup.userData.moving = (ctrl.grade!==9) && moving;
+  const input = new THREE.Vector3().addScaledVector(fwd, joy.y).addScaledVector(right, joy.x);
+  if(input.length() > 1) input.normalize();
+
+  // ── NATURAL ACCELERATION / DECELERATION ──
+  let maxSpd = 3, accel = 9;
+  let inWater = false, hazardPush = 0;
 
   if(ctrl.grade===7 || ctrl.grade===8){
-    // ── WADING: water depth slows you, current drags you downstream ──
     const depth = scen.depth||0, vel = scen.vel||0;
-    const inFlood = ctrl.proceed && Math.abs(s.position.x) < 7 && s.position.z > -6 && s.position.z < 8;
-    const speed = 3 * (inFlood ? Math.max(.4, 1 - depth*.9) : 1);
-    s.position.x += mv.x * speed * dt;
-    s.position.z += mv.z * speed * dt;
-    if(inFlood) s.position.x += vel * .35 * dt; // current pushes sideways
+    inWater = ctrl.proceed && Math.abs(s.position.x) < 7 && s.position.z > -6 && s.position.z < 8;
+    if(inWater){
+      maxSpd = 3 * Math.max(.38, 1 - depth*.95);  // deep water slows you
+      accel = 5;                                   // sluggish in water
+      hazardPush = vel * .45;                      // current shoves sideways
+    }
+  } else if(ctrl.grade===9){
+    maxSpd = 3.4; accel = 4.5;                     // boat momentum: slow to start/stop
+  } else {
+    const wind = scen.wind||0;
+    const onBridge = Math.abs(s.position.x) <= 7.2;
+    maxSpd = 2.4 * (wind>60 ? .6 : 1);
+    accel = 8;
+    if(onBridge) hazardPush = wind * .012;         // wind gusts shove you
+  }
+
+  const desired = input.clone().multiplyScalar(maxSpd);
+  const k = 1 - Math.exp(-accel*dt);
+  ctrl.vel.lerp(desired, k);
+  const moving = ctrl.vel.length() > .25;
+  if(humanGroup && humanGroup.userData) humanGroup.userData.moving = (ctrl.grade!==9) && moving;
+
+  // Integrate motion
+  s.position.x += ctrl.vel.x * dt;
+  s.position.z += ctrl.vel.z * dt;
+
+  // ── ADAPTIVE HAZARD AI: environment pushes back, stability drains ──
+  const stabEl = document.getElementById('m-stab');
+  if(ctrl.grade===7 || ctrl.grade===8){
+    if(inWater){
+      const vel = scen.vel||0;
+      const gust = (Math.sin(t*1.7)*.5 + .6);
+      s.position.x += hazardPush * gust * dt;       // current drift (varies like real flow)
+      ctrl.stab += hazardPush * .22 * dt * (moving ? .7 : 1.3); // standing still = swept faster
+      if(stabEl) stabEl.classList.add('on');
+      // Footstep splashes + sound
+      if(moving){
+        ctrl.stepT += dt;
+        if(ctrl.stepT > .34){
+          ctrl.stepT = 0;
+          if(ctrl.splash) ctrl.splash.spawn(s.position.x, (scen.depth||0)*.5+.03, s.position.z);
+          AudioSys.step(true);
+        }
+      }
+    } else {
+      ctrl.stab = Math.max(0, ctrl.stab - .5*dt);   // recover on dry ground
+      if(moving){ ctrl.stepT += dt; if(ctrl.stepT>.4){ ctrl.stepT=0; AudioSys.step(false); } }
+    }
     s.position.x = THREE.MathUtils.clamp(s.position.x, -6, 6);
     s.position.z = THREE.MathUtils.clamp(s.position.z, -15.5, 15);
-    if(moving) s.rotation.y = Math.atan2(mv.x, mv.z);
+    if(moving) s.rotation.y = Math.atan2(ctrl.vel.x, ctrl.vel.z);
   }
   else if(ctrl.grade===9){
-    // ── BOAT: momentum steering, gentle heading turn ──
-    const speed = 3.2;
-    s.position.x += mv.x * speed * dt;
-    s.position.z += mv.z * speed * dt;
     s.position.x = THREE.MathUtils.clamp(s.position.x, -6.5, 10);
     s.position.z = THREE.MathUtils.clamp(s.position.z, -6, 6);
     if(moving){
-      const target = Math.atan2(mv.z, mv.x) * -1;
-      s.rotation.y += (target - s.rotation.y) * .04;
+      const target = -Math.atan2(ctrl.vel.z, ctrl.vel.x);
+      s.rotation.y += (target - s.rotation.y) * .035;
+      // Boat wake splashes
+      ctrl.stepT += dt;
+      if(ctrl.stepT > .28){
+        ctrl.stepT = 0;
+        if(ctrl.splash) ctrl.splash.spawn(s.position.x - Math.cos(s.rotation.y)*2.2, .12, s.position.z + Math.sin(s.rotation.y)*2.2);
+        if(Math.random()<.4) AudioSys.splashS();
+      }
     }
   }
   else {
-    // ── BRIDGE: follow the deck sag, wind gusts shove you sideways ──
     const wind = scen.wind||0;
-    const speed = 2.3 * (wind>60 ? .65 : 1);
-    s.position.x += mv.x * speed * dt;
-    s.position.z += mv.z * speed * dt;
     const onBridge = Math.abs(s.position.x) <= 7.2;
     if(onBridge){
-      // Wind push: rhythmic gusts + steady lean the player must fight
-      s.position.z += (Math.sin(t*2.3)*.6 + .4) * wind * .0006;
+      // Gusts: rhythmic + random bursts the player must fight against
+      const gust = Math.sin(t*2.3)*.55 + Math.sin(t*5.1)*.3 + .45;
+      s.position.z += gust * wind * .00065;
+      // Stability drains near the edge, or in strong wind
+      const edge = Math.abs(s.position.z) / .55;
+      ctrl.stab += (edge*.35 + wind*.002) * dt;
+      if(edge < .5) ctrl.stab = Math.max(0, ctrl.stab - .35*dt);
       s.position.z = THREE.MathUtils.clamp(s.position.z, -.55, .55);
       const tt = THREE.MathUtils.clamp((s.position.x+7)/14, 0, 1);
       s.position.y = 1 - Math.sin(tt*Math.PI)*1.15 + .08;
+      if(stabEl) stabEl.classList.add('on');
+      if(moving){ ctrl.stepT += dt; if(ctrl.stepT>.36){ ctrl.stepT=0; AudioSys.step(false); } }
     } else {
-      s.position.y += (0.15 - s.position.y) * .1; // step off onto the bank
+      s.position.y += (0.15 - s.position.y) * .1;
       s.position.z = THREE.MathUtils.clamp(s.position.z, -3, 3);
+      ctrl.stab = Math.max(0, ctrl.stab - .6*dt);
     }
     s.position.x = THREE.MathUtils.clamp(s.position.x, -12, 10);
-    if(moving) s.rotation.y = Math.atan2(mv.x, mv.z);
+    if(moving) s.rotation.y = Math.atan2(ctrl.vel.x, ctrl.vel.z);
   }
+
+  // Stability meter + stumble knockback
+  ctrl.stab = Math.min(1.05, ctrl.stab);
+  const fill = document.getElementById('m-stab-fill');
+  if(fill) fill.style.width = (Math.min(1,ctrl.stab)*100).toFixed(0)+'%';
+  if(ctrl.stab >= 1) stumble(s);
 
   // Distance HUD + gateway collision
   document.getElementById('m-dist').textContent = gdist.toFixed(1) + ' m';
   if(gdist < 2.2) controlSuccess();
+}
+
+// Hazard wins this round: knock the player back toward safety
+function stumble(s){
+  ctrl.stab = 0;
+  ctrl.vel.set(0,0,0);
+  AudioSys.stumble();
+  if(navigator.vibrate) navigator.vibrate([90,50,90]);
+  // Knockback: return partway toward the start point
+  s.position.lerp(ctrl.startPos, .55);
+  if(ctrl.grade===10) s.position.z = 0;
+  const st = document.getElementById('stumble');
+  st.style.display = 'block';
+  setTimeout(()=>{ st.style.display = 'none'; }, 1600);
+  // Camera shake
+  const orig = ctrl.camOff.clone();
+  let n = 0;
+  const iv = setInterval(()=>{
+    ctrl.camOff.copy(orig).add(new THREE.Vector3((Math.random()-.5)*.8,(Math.random()-.5)*.5,(Math.random()-.5)*.8));
+    if(++n > 7){ clearInterval(iv); ctrl.camOff.copy(orig); }
+  }, 45);
 }
 
 function controlSuccess(){
@@ -1434,6 +1808,9 @@ function controlSuccess(){
   document.getElementById('m-text').textContent = '✓ GATEWAY PASSED — Level Complete';
   document.getElementById('m-dist').textContent = 'advancing...';
   if(navigator.vibrate) navigator.vibrate([50,40,50,40,90]);
+  AudioSys.pass();
+  AudioSys.hum(false);
+  document.body.classList.remove('cinema');
   const stick = document.getElementById('joy-stick');
   stick.style.boxShadow = '0 0 28px rgba(34,197,94,.9), 0 4px 15px rgba(0,0,0,.6)';
   setTimeout(()=>{ stick.style.boxShadow = ''; }, 900);
@@ -1493,6 +1870,9 @@ function loadScenario(idx){
   document.getElementById('mission').style.display = 'none';
   ['scen-card','choices','dots'].forEach(id=>{ document.getElementById(id).style.display = ''; });
   document.querySelector('.joy-label').textContent = '⟁ Look';
+  document.body.classList.remove('cinema');
+  document.getElementById('ui').classList.remove('uidim');
+  AudioSys.hum(false);
   updateDots();
   document.getElementById('sc-num').textContent = `Scenario ${idx+1} of ${GS.gd.scenarios.length}`;
   document.getElementById('sc-sit').textContent = scen.sit;
@@ -1592,6 +1972,7 @@ function handleChoice(i){
     document.getElementById('gp-hint').textContent = 'Review the physics below';
   }
   hapticBuzz(ok);
+  if(ok) AudioSys.correct(); else AudioSys.wrong();
   setTimeout(()=>showFeedback(ok, scen), 900);
 }
 
@@ -1706,8 +2087,17 @@ function initControls(){
   document.addEventListener('touchmove', move, {passive:false});
   document.addEventListener('touchend', end);
 
-  document.getElementById('zoom-in').onclick = ()=>{ zoomLevel = Math.min(2.4, zoomLevel+.25); if(navigator.vibrate) navigator.vibrate(15); };
-  document.getElementById('zoom-out').onclick = ()=>{ zoomLevel = Math.max(.6, zoomLevel-.25); if(navigator.vibrate) navigator.vibrate(15); };
+  const bootAudio = ()=>{ AudioSys.init(); AudioSys.resume(); };
+  document.addEventListener('pointerdown', bootAudio, {once:false});
+  document.addEventListener('keydown', bootAudio, {once:false});
+  document.getElementById('snd-btn').onclick = (e)=>{
+    AudioSys.enabled = !AudioSys.enabled;
+    e.target.textContent = AudioSys.enabled ? '🔊' : '🔇';
+    if(!AudioSys.enabled) AudioSys.stopAmb();
+    AudioSys.click();
+  };
+  document.getElementById('zoom-in').onclick = ()=>{ zoomLevel = Math.min(2.4, zoomLevel+.25); AudioSys.click(); if(navigator.vibrate) navigator.vibrate(15); };
+  document.getElementById('zoom-out').onclick = ()=>{ zoomLevel = Math.max(.6, zoomLevel-.25); AudioSys.click(); if(navigator.vibrate) navigator.vibrate(15); };
   document.getElementById('cam-reset').onclick = ()=>{ cam.yaw = 0; cam.pitch = 0; zoomLevel = 1; if(navigator.vibrate) navigator.vibrate(15); };
 
   // Keyboard
