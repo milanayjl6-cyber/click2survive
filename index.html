@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+x<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Click to Survive 3D ULTRA — Immersive Survival Simulation</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -28,6 +28,26 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
 .ld-spec{display:flex;gap:1.4rem;margin-top:2rem;font-size:.6rem;color:var(--txd);letter-spacing:.1em;text-transform:uppercase;flex-wrap:wrap;justify-content:center}
 .ld-spec span{display:flex;align-items:center;gap:5px}
 .ld-spec span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.ld-obj{margin-top:1.8rem;max-width:340px;text-align:center;font-size:.82rem;color:var(--txm);line-height:1.55}
+/* Reduced motion: kill decorative animation for vestibular safety */
+@media (prefers-reduced-motion: reduce){ *,*::before,*::after{animation-duration:.01s !important;animation-iteration-count:1 !important;transition-duration:.01s !important} }
+/* Lab panel (buoyancy laboratory) */
+.lab-panel{background:var(--bg-glass2);backdrop-filter:blur(22px);border:1px solid var(--bord);border-radius:18px;padding:1rem 1.2rem;max-width:560px;width:100%;pointer-events:all;text-align:center}
+.lab-prompt{font-size:.85rem;font-weight:600;margin-bottom:.7rem;line-height:1.4}
+.lab-step{display:inline-flex;align-items:center;gap:14px;margin-bottom:.7rem}
+.lab-step button{width:46px;height:46px;border-radius:12px;border:1.5px solid var(--bord2);background:rgba(255,255,255,.08);color:#fff;font-size:1.3rem;font-weight:700;cursor:pointer;font-family:inherit}
+.lab-step button:disabled{opacity:.3;pointer-events:none}
+.lab-num{font-size:1.9rem;font-weight:800;min-width:56px}
+.lab-go{display:block;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:.3rem}
+.lab-go:disabled{opacity:.35;pointer-events:none}
+.gauge{margin:.5rem 0 .2rem;text-align:left}
+.gauge-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.68rem}
+.gauge-lbl{width:118px;color:var(--txm);font-family:monospace}
+.gauge-bw{flex:1;height:9px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden}
+.gauge-b{height:100%;border-radius:5px;transition:width .3s}
+.gauge-val{width:72px;text-align:right;font-family:monospace;font-size:.68rem}
+.lab-hint{font-size:.72rem;color:#fbbf24;margin-top:.5rem;line-height:1.45;display:none}
+.lab-attempt{font-size:.62rem;color:var(--txd);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.4rem}
 
 /* MENU */
 #s-menu{flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(5,15,35,.42),rgba(2,8,20,.68));overflow-y:auto;padding:2rem 0}
@@ -80,15 +100,15 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
 .b-unsafe{background:linear-gradient(90deg,#dc2626,#ef4444);box-shadow:0 0 8px rgba(239,68,68,.5)}
 
 /* SCENARIO + CHOICES */
-#scen-card{position:absolute;left:1.25rem;top:8.2rem;background:var(--bg-glass2);backdrop-filter:blur(26px);border:1px solid var(--bord);border-radius:18px;padding:1.05rem 1.25rem;max-width:330px;width:min(330px,44vw);text-align:left;pointer-events:none;z-index:4;animation:sUp .5s cubic-bezier(.4,0,.2,1);transition:opacity .3s;border-left:3px solid var(--acc)}
-@keyframes sUp{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+#scen-card{position:absolute;left:50%;transform:translateX(-50%);bottom:225px;background:var(--bg-glass2);backdrop-filter:blur(26px);border:1px solid var(--bord);border-radius:20px;padding:1.2rem 1.6rem;max-width:600px;width:92%;text-align:center;pointer-events:none;z-index:4;animation:sUp .5s cubic-bezier(.4,0,.2,1)}
+@keyframes sUp{from{opacity:0;transform:translate(-50%,18px)}to{opacity:1;transform:translate(-50%,0)}}
 .sc-num{font-size:.58rem;text-transform:uppercase;letter-spacing:.22em;color:var(--txd);margin-bottom:.5rem;font-weight:600}
 .sc-sit{font-size:.9rem;line-height:1.5;margin-bottom:.5rem;color:rgba(255,255,255,.92)}
 .sc-q{font-size:.78rem;font-weight:600;color:var(--txm)}
-#dots{position:absolute;left:1.4rem;top:7.55rem;display:flex;gap:5px;z-index:4;transition:opacity .3s}
+#dots{position:absolute;bottom:203px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:4}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);transition:all .3s}
 .dot.done{background:#22c55e}.dot.cur{background:#fff;transform:scale(1.35);box-shadow:0 0 8px rgba(255,255,255,.6)}
-#choices{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;max-width:min(640px,calc(100vw - 320px));width:100%;z-index:4;transition:opacity .3s}
+#choices{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);display:flex;gap:.65rem;flex-wrap:wrap;justify-content:center;max-width:700px;width:96%;z-index:4}
 .ch-btn{flex:1;min-width:155px;padding:13px 16px;border-radius:15px;border:1.5px solid var(--bord2);background:var(--bg-glass);backdrop-filter:blur(16px);color:#fff;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;pointer-events:all;line-height:1.35;font-family:inherit}
 .ch-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);transform:translateY(-3px);box-shadow:0 8px 26px rgba(0,0,0,.35)}
 .ch-btn.correct{background:rgba(34,197,94,.28);border-color:#22c55e;pointer-events:none;box-shadow:0 0 22px rgba(34,197,94,.4)}
@@ -178,29 +198,13 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',sys
 #back-btn{position:absolute;top:1rem;right:1.25rem;background:var(--bg-glass);backdrop-filter:blur(16px);border:1px solid var(--bord);color:#fff;padding:7px 13px;border-radius:22px;font-size:.72rem;font-weight:500;cursor:pointer;pointer-events:all;transition:all .15s;font-family:inherit;z-index:7}
 #back-btn:hover{background:rgba(255,255,255,.15)}
 #trans{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:990;transition:opacity .4s}
-#ui.uidim #scen-card,#ui.uidim #params-panel,#ui.uidim #choices,#ui.uidim #dots,#ui.uidim #pagasa-alert{opacity:.14}
-/* Cinematic letterbox during control phase */
-.lbx{position:fixed;left:0;right:0;height:0;background:#000;z-index:20;transition:height .6s cubic-bezier(.4,0,.2,1);pointer-events:none}
-#lbx-t{top:0}#lbx-b{bottom:0}
-body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
-/* Lightning flash overlay */
-#flash{position:fixed;inset:0;background:#dfe9ff;opacity:0;pointer-events:none;z-index:8;transition:opacity .06s}
-/* Stability meter */
-.m-stab{width:180px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin:.45rem auto 0;overflow:hidden;display:none}
-.m-stab.on{display:block}
-#m-stab-fill{height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);transition:width .15s}
-/* Stumble toast */
-#stumble{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);background:rgba(80,10,10,.85);backdrop-filter:blur(14px);border:1.5px solid #ef4444;border-radius:14px;padding:.75rem 1.4rem;font-size:.88rem;font-weight:700;display:none;z-index:6;animation:stumbleIn .3s}
-@keyframes stumbleIn{from{transform:translate(-50%,-30%);opacity:0}to{transform:translate(-50%,-50%);opacity:1}}
 #tutorial{position:absolute;left:50%;bottom:260px;transform:translateX(-50%);background:var(--bg-glass2);backdrop-filter:blur(14px);border:1px solid var(--bord);border-radius:13px;padding:9px 15px;font-size:.74rem;color:var(--txm);pointer-events:none;display:none;z-index:5;animation:tFade 3s ease-in-out infinite}
 @keyframes tFade{0%,100%{opacity:.7}50%{opacity:1}}
 
 @media(max-width:520px){
   .grade-grid{gap:.65rem}.g-card{padding:1rem .85rem;border-radius:17px}
   .g-num{font-size:1.9rem}.g-topic{font-size:.82rem}
-  #scen-card{padding:.8rem .95rem;top:7.6rem;max-width:60vw}.sc-sit{font-size:.76rem}
-  #dots{top:7rem}
-  #choices{max-width:calc(100vw - 1rem);bottom:10.2rem}
+  #scen-card{padding:.9rem 1.1rem;bottom:198px}.sc-sit{font-size:.8rem}
   .ch-btn{min-width:125px;font-size:.75rem;padding:10px 11px}
   #params-panel{top:100px;right:.65rem;padding:.65rem .75rem;min-width:155px}
   #joy-zone{width:112px;height:112px;left:.65rem;bottom:.65rem}
@@ -209,8 +213,8 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
   .fb-card{padding:1.4rem 1.3rem 1.1rem}.fbv-t{font-size:1.1rem}
 }
 @media(max-height:620px){
-  #scen-card{top:6.8rem;padding:.7rem .95rem}.sc-sit{font-size:.74rem}
-  #dots{top:6.3rem}
+  #scen-card{bottom:172px;padding:.75rem 1.2rem}.sc-sit{font-size:.76rem}
+  #dots{bottom:152px}#choices{bottom:92px}
 }
 </style>
 </head>
@@ -224,7 +228,7 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
     <div class="ld-tag">Ultra · Immersive 3D Simulation</div>
     <div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div>
     <div class="ld-tip" id="ld-tip">Initializing rendering engine...</div>
-    <div class="ld-spec"><span>PBR Materials</span><span>Dynamic Water</span><span>Volumetric Rain</span><span>HDR Lighting</span></div>
+    <div class="ld-obj" id="ld-obj">Make survival decisions in floods and typhoons — and test them with real physics.</div>
   </div>
 
   <div id="s-menu" class="screen">
@@ -258,7 +262,7 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
           <div class="g-meta"><span>Drag force</span><span>Bridge stability</span></div>
         </div>
       </div>
-      <div class="menu-foot">Joystick to look around · Keys 1/2/3 to answer · Validated against PAGASA · FEMA · UNDRR · WMO standards</div>
+      <div class="menu-foot">Drag the joystick to look around · Answer with the buttons or keys 1/2/3 · Hazard guidance follows PAGASA / FEMA / UNDRR advisories · <a href="#" onclick="showPhysics();return false" style="color:var(--acc)">Physics equations published here</a></div>
     </div>
   </div>
 
@@ -275,15 +279,13 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
     </div>
     <div id="pagasa-alert"></div>
     <div id="params-panel" style="display:none"></div>
-    <button id="back-btn" onclick="goMenu()">← Menu</button>
+    <button id="back-btn" onclick="goMenu()" aria-label="Back to menu">← Menu</button>
 
     <div id="mission">
       <div class="m-eyebrow">🎮 Simulation Control Active</div>
       <div class="m-text" id="m-text">Steer to the gateway</div>
       <div class="m-dist">▸ <span id="m-dist">–</span> to gateway · joystick to move</div>
-      <div class="m-stab" id="m-stab"><div id="m-stab-fill"></div></div>
     </div>
-    <div id="stumble">⚠ Swept off balance! Pushed back — steady yourself.</div>
 
     <div id="gate-prompt">
       <div class="gp-title">⬡ Level Gateway ⬡</div>
@@ -300,7 +302,7 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
     <div id="choices"></div>
     <div id="tutorial">⟵ Drag joystick to look · Buttons to zoom</div>
 
-    <div id="joy-zone">
+    <div id="joy-zone" role="application" aria-label="Virtual joystick: drag to look around, or to move during simulation control. Keyboard: WASD or arrow keys.">
       <div class="joy-base">
         <div class="joy-ring"></div>
         <div class="joy-stick" id="joy-stick">
@@ -312,10 +314,10 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
     </div>
 
     <div id="act-pad">
-      <button class="act-btn" id="zoom-in" title="Zoom in">+</button>
-      <button class="act-btn" id="zoom-out" title="Zoom out">−</button>
-      <button class="act-btn" id="cam-reset" title="Reset view">⌂</button>
-      <button class="act-btn" id="snd-btn" title="Sound on/off">🔊</button>
+      <button class="act-btn" id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+      <button class="act-btn" id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
+      <button class="act-btn" id="cam-reset" title="Reset view" aria-label="Reset camera view">⌂</button>
+      <button class="act-btn" id="q-btn" title="Graphics quality" aria-label="Cycle graphics quality" style="font-size:.68rem;font-weight:700">HD</button>
     </div>
 
     <div id="fb-wrap">
@@ -338,7 +340,25 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
     </div>
   </div>
 
-  <div id="s-res" class="screen">
+  <div id="phys-modal" style="display:none;position:fixed;inset:0;background:rgba(0,5,15,.85);backdrop-filter:blur(10px);z-index:60;overflow-y:auto;padding:2rem 1rem" onclick="if(event.target===this)this.style.display='none'">
+      <div style="max-width:640px;margin:0 auto;background:linear-gradient(180deg,rgba(15,25,45,.97),rgba(8,15,30,.98));border:1px solid var(--bord);border-radius:20px;padding:1.8rem">
+        <h2 style="font-size:1.2rem;margin-bottom:.3rem">Physics Reference</h2>
+        <p style="font-size:.72rem;color:var(--txd);margin-bottom:1.2rem">Governing equations, constants and assumptions used by each simulation. Written so a physics teacher can audit them.</p>
+        <div style="font-size:.8rem;line-height:1.7;color:var(--txm)">
+          <p style="color:#a78bfa;font-weight:700;margin-top:.8rem">Grade 9 — Buoyancy Laboratory (computed live)</p>
+          <p style="font-family:monospace;font-size:.76rem">F_b = ρ·g·V_displaced &nbsp;·&nbsp; W = (m_hull + n·m_person)·g<br>floats ⟺ V_needed = W/(ρ·g) ≤ V_hull &nbsp;·&nbsp; freeboard = 1 − V_needed/V_hull</p>
+          <p>Constants: g = 9.81 m/s² · ρ fresh = 1000 kg/m³ · ρ sea = 1025 kg/m³.<br>Assumptions: incompressible fluid, rigid hull, uniform loading, calm water, no dynamic waves.</p>
+          <p style="color:#38bdf8;font-weight:700;margin-top:.8rem">Grades 7–8 — Floodwater thresholds (scenario classification)</p>
+          <p style="font-family:monospace;font-size:.76rem">F_drag = ½·ρ·C_d·A·v² &nbsp;·&nbsp; F_hydrostatic ≈ ρ·g·h·A</p>
+          <p>Depth: &lt;0.3 m safe · 0.3–0.5 m risky · &gt;0.5 m unsafe (FEMA/UNDRR). Velocity: &lt;0.5 m/s safe · 0.5–1.0 risky · &gt;1.0 unsafe (Jonkman; UNSW WRL). Rainfall bands per PAGASA: Yellow 7.5–15, Orange 15–30, Red &gt;30 mm/hr. These scenarios classify against published thresholds; the drag values shown in explanations are order-of-magnitude estimates for a standing adult (A ≈ 0.4 m², C_d ≈ 1.1).</p>
+          <p style="color:#34d399;font-weight:700;margin-top:.8rem">Grade 10 — Wind on a person (scenario classification)</p>
+          <p style="font-family:monospace;font-size:.76rem">F_wind = ½·ρ_air·C_d·A·v² &nbsp;(ρ_air = 1.2 kg/m³)</p>
+          <p>Wind bands per PAGASA/WMO: &lt;60 km/h manageable · 60–100 strong · &gt;100 dangerous.</p>
+        </div>
+        <button class="res-btn primary" style="margin-top:1.2rem;width:100%" onclick="document.getElementById('phys-modal').style.display='none'">Close</button>
+      </div>
+    </div>
+    <div id="s-res" class="screen">
     <div class="res-card">
       <div class="res-ico" id="res-icon">🎯</div>
       <div class="res-h">Simulation Complete!</div>
@@ -350,11 +370,12 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
         <button class="res-btn" onclick="replayGrade()">↺ Replay</button>
         <button class="res-btn primary" onclick="goMenu()">Back to Menu</button>
       </div>
+      <div class="res-btns" style="margin-top:.6rem">
+        <button class="res-btn" onclick="downloadCSV()" aria-label="Download results as CSV for teacher">⬇ Download results (CSV)</button>
+      </div>
     </div>
   </div>
 </div>
-<div id="lbx-t" class="lbx"></div><div id="lbx-b" class="lbx"></div>
-<div id="flash"></div>
 <div id="trans"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -362,7 +383,7 @@ body.cinema #lbx-t,body.cinema #lbx-b{height:5.5vh}
 'use strict';
 // ═══ 40 research-grounded scenarios (PAGASA/FEMA/UNDRR/WMO thresholds) ═══
 const GRADES = {
-  7:{name:'Grade 7',topic:'Forces & Floodwater',color:'#38bdf8',
+  7:{name:'Grade 7',topic:'Forces & Floodwater',color:'#38bdf8',melc:'S7FE-IIIa-1/2',concept:'forces_floodwater',prime:'Think: how does deeper water change the force on your legs?',
     scenarios:[
       {depth:.25,vel:.2,out:'safe',ci:0,sit:'After light morning rain, the path beside the river has minor flooding. Water is calm and clear.',q:'What is the safest action?',opts:['Cross carefully, watching footing','Run across quickly','Wait indefinitely'],fb:'At 0.25m depth, hydrostatic force is minimal and your centre of gravity remains stable. Careful crossing maintains full balance.',phy:'F = ρ·g·h·A. At h=0.25m, lateral water force ≈ 30N per leg — well within human resistance capacity.'},
       {depth:.35,vel:.4,out:'risky',ci:1,sit:'The riverbank pathway is flooded to mid-calf level. You feel the current pushing your legs.',q:'What should you do?',opts:['Run across before water rises','Cross slowly with controlled steps','Jump across the channel'],fb:'Increased depth raises drag force. Slow, deliberate movement helps maintain dynamic balance against the current.',phy:'F_drag = ½ρC_d·A·v². At 0.35m and 0.4m/s, drag ≈ 80N — significant but manageable with control.'},
@@ -375,7 +396,7 @@ const GRADES = {
       {depth:.40,vel:.45,out:'risky',ci:0,sit:'Moderate flooding — knee level with a moderate, steady current you can feel.',q:'What should you do?',opts:['Cross slowly and carefully','Run and get through quickly','Wait indefinitely on this side'],fb:'Risky but manageable with great care. Slow movement and watching footing are essential.',phy:'Velocity 0.45m/s is below the 0.5m/s threshold. Controlled motion maintains safe balance dynamics.'},
       {depth:.80,vel:1.0,out:'unsafe',ci:1,sit:'Worst flooding yet — hip-deep water with a powerful current knocking you sideways.',q:'Correct action?',opts:['Wait on the highest ground available','Do not cross under any circumstances','Cross with a group holding hands'],fb:'Extreme combined force will knock anyone off their feet. Life-threatening — do not cross at all.',phy:'F_drag = ½ρC_d·A·v² ≈ 450N at 1.0m/s. Total force vastly exceeds safe human resistance limits.'}
     ]},
-  8:{name:'Grade 8',topic:'Rainfall & Newton\'s Laws',color:'#0ea5e9',
+  8:{name:'Grade 8',topic:'Rainfall & Newton\'s Laws',color:'#0ea5e9',melc:'S8FE-Ia-15/S8ES-IIa-14',concept:'rainfall_current',prime:'Think: what connects rainfall upstream to the force of the current here?',
     scenarios:[
       {rain:35,vel:1.2,out:'unsafe',ci:2,sit:'PAGASA RED warning — 35mm/hr rainfall. The river is rising rapidly with a powerful current.',q:'What should you do?',opts:['Cross the river on foot','Ride a small boat across','Wait on high ground'],fb:'RED warning means severe flooding and dangerous currents. Neither foot crossing nor small boat is safe.',phy:'Q = rainfall × catchment area. At 35mm/hr, river discharge increases dramatically, producing 1.2m/s current with debris.'},
       {rain:20,vel:.8,out:'risky',ci:1,sit:'PAGASA Orange warning (20mm/hr). The river is rising with a strong, steady current.',q:'What should you do?',opts:['Cross now while still passable','Wait and monitor conditions','Run and cross quickly'],fb:'Orange means flooding is likely and conditions are worsening. With 0.8m/s current, crossing is increasingly risky.',phy:'F=ma: greater current velocity means greater force. Orange signals escalation — wait until rainfall reduces.'},
@@ -388,20 +409,25 @@ const GRADES = {
       {rain:22,vel:.9,out:'risky',ci:1,sit:'Orange warning (22mm/hr) with 0.9m/s current. Conditions worsening steadily.',q:'Right decision?',opts:['Cross — you are strong enough','Wait — conditions risky and rising','Cross holding onto someone'],fb:'0.9m/s approaches the 1.0m/s unsafe threshold. Conditions still worsening. Wait.',phy:'Combined Orange rainfall + v→1.0m/s = risky trending unsafe. Each passing minute is more dangerous.'},
       {rain:15,vel:.5,out:'risky',ci:1,sit:'Rainfall just hit the Orange boundary (15mm/hr). Current at 0.5m/s — both at thresholds.',q:'What should you do?',opts:['Cross now while still possible','Wait and prepare to evacuate','Try swimming — easier'],fb:'Both parameters at their thresholds — a critical tipping point. Conditions may rapidly escalate.',phy:'15mm/hr = Orange threshold. 0.5m/s = risky velocity threshold. The system is balanced precariously.'}
     ]},
-  9:{name:'Grade 9',topic:'Buoyancy & Boat Stability',color:'#a78bfa',
+  9:{name:'Grade 9',topic:'Buoyancy Laboratory',color:'#a78bfa',melc:'S9FE-IIa-20',concept:'buoyancy',prime:'Think: what decides whether a loaded boat floats — its weight, or something else?',
     scenarios:[
-      {cap:5,load:5,dist:'even',out:'safe',ci:0,sit:'Students need to cross. The bancá holds 5 people and exactly 5 want to board, seated evenly.',q:'Correct action?',opts:['Board and cross normally','Add more passengers','Stand up while riding'],fb:'Load equals capacity with even distribution. Buoyant force perfectly balances total weight at the designed waterline.',phy:'Archimedes: F_b = ρ·g·V_displaced. At full capacity, F_b = W_total exactly. Metacentric height positive — stable.'},
-      {cap:5,load:7,dist:'even',out:'unsafe',ci:1,sit:'More students arrive. 7 people want to ride a bancá designed for only 5.',q:'What must you do?',opts:['Allow all 7 — the boat looks fine','Remove 2 passengers before boarding','Have 2 stand to save space'],fb:'Load exceeds capacity by 40%. Total weight > maximum buoyant force. Boat sinks below safe freeboard.',phy:'When W_total > F_b_max, net upward force becomes negative. Freeboard drops — water enters the hull.'},
-      {cap:6,load:6,dist:'even',out:'safe',ci:0,sit:'Six people need to cross. Bancá capacity is exactly 6 with even distribution.',q:'Correct action?',opts:['Board and cross — all is fine','Add one more person','Have some stand to spread weight'],fb:'Even distribution at full capacity. Centre of buoyancy aligns with centre of gravity. Stable crossing.',phy:'Even load ensures C.G. aligns with C.B. Metacentric height positive. Boat resists tipping by restoring moment.'},
-      {cap:6,load:6,dist:'uneven',out:'risky',ci:1,sit:'Six passengers seated — but all crowded to one side of the bancá.',q:'What should you do?',opts:['Cross like this — same total weight','Redistribute passengers evenly','Add weight to the lighter side'],fb:'Uneven distribution creates rotational torque. The boat tilts toward the heavier side, reducing stability.',phy:'Torque τ = F × d. Off-centre C.G. reduces metacentric height. Below zero → capsize.'},
-      {cap:4,load:5,dist:'even',out:'unsafe',ci:2,sit:'A bancá with capacity 4 has 5 people wanting to board — one extra person.',q:'What should you do?',opts:['Cross anyway — only one extra','Wait for another bancá','One passenger stays behind'],fb:'Even one extra person tips the boat past its safe waterline. One passenger must wait for the next trip.',phy:'V_max × ρ × g = W_max. Even 1 excess person changes this balance. Freeboard drops critically.'},
-      {cap:6,load:6,dist:'even',out:'risky',ci:0,sit:'Full capacity bancá — but small waves on the river from upstream activity.',q:'What should you do?',opts:['Cross with caution, sit low and still','Do not cross at all','Stand and brace against waves'],fb:'Full capacity plus waves reduces safety margin. Sitting low lowers C.G. and increases stability.',phy:'Waves add periodic external force. Sitting low minimizes C.G. height — increasing restoring moment.'},
-      {cap:5,load:5,dist:'standing',out:'risky',ci:1,sit:'All 5 passengers at capacity — but all standing up to see ahead.',q:'What should you do?',opts:['Fine — load is correct','Tell everyone to sit down','Have some lie flat'],fb:'Standing raises C.G. dramatically. Even at correct load, high C.G. reduces metacentric height.',phy:'h_m = I/V − BG. Standing raises G, reducing h_m. A rocking wave can capsize if h_m ≈ 0.'},
-      {cap:6,load:7,dist:'even',out:'unsafe',ci:0,sit:'One extra person joined, bringing total to 7 in a boat designed for 6.',q:'Correct action?',opts:['Remove one passenger first','Cross quickly — one extra is fine','All squeeze together'],fb:'Overloading by even one person increases submersion risk. Remove the extra passenger — no exceptions.',phy:'F_net = F_b − W_total. When W > F_b_max, F_net is negative. The boat sinks regardless of arrangement.'},
-      {cap:5,load:5,dist:'shifting',out:'risky',ci:1,sit:'Passengers keep shifting around and leaning over the side to look at the water.',q:'Right action?',opts:['Let people move freely','Tell everyone to stay still and centred','Slow the boat down'],fb:'Sudden movement rapidly shifts C.G. Destabilization occurs faster than the restoring moment can respond.',phy:'Dynamic C.G. shift changes torque instantaneously. Capsize risk is high with sudden movement.'},
-      {cap:6,load:8,dist:'even',out:'unsafe',ci:0,sit:'Emergency: 8 people crowded onto a bancá designed for only 6.',q:'Correct decision?',opts:['Remove 2 — make 2 trips if needed','Cross quickly — emergency','Have 2 hang on the outrigger'],fb:'Even in emergencies, 33% overload is extremely dangerous. Two crossings is the only safe solution.',phy:'At 8/6 overload, freeboard approaches zero in calm water. Any wave causes swamping and sinking.'}
+      {lab:true,objective:'Decide how many people this bancá can carry before it swamps.',
+       sit:'A bancá waits at the dock. Hull volume 0.45 m³, hull mass 120 kg. Eight evacuees — 60 kg each — are waiting to cross.',
+       world:{rho:1000,g:9.81,hullV:.45,hullM:120,pM:60,avail:8}},
+      {lab:true,objective:'A bigger hull displaces more water. How many can this one take?',
+       sit:'A larger bancá: hull volume 0.60 m³, hull mass 150 kg. Nine evacuees of 60 kg each are waiting.',
+       world:{rho:1000,g:9.81,hullV:.60,hullM:150,pM:60,avail:9}},
+      {lab:true,objective:'Lighter passengers change the count. Work out the new capacity.',
+       sit:'A lighter bancá — hull 0.42 m³, 100 kg. Today the evacuees are students of 50 kg each; eight are waiting.',
+       world:{rho:1000,g:9.81,hullV:.42,hullM:100,pM:50,avail:8}},
+      {lab:true,objective:'Measure this bancá\'s true capacity in the freshwater river.',
+       sit:'This bancá (hull 0.47 m³, mass 120 kg) crosses the freshwater river. Eight adults of 60 kg wait at the dock.',
+       world:{rho:1000,g:9.81,hullV:.47,hullM:120,pM:60,avail:8}},
+      {lab:true,salt:true,objective:'Same boat, seawater. More people, fewer, or the same? Predict — then test.',
+       sit:'The SAME bancá (0.47 m³, 120 kg) now launches at the river mouth — seawater, ρ = 1025 kg/m³. Eight adults wait. Will salt water change how many it carries?',
+       world:{rho:1025,g:9.81,hullV:.47,hullM:120,pM:60,avail:8}}
     ]},
-  10:{name:'Grade 10',topic:'Wind Forces & Structural Stability',color:'#34d399',
+  10:{name:'Grade 10',topic:'Wind Forces & Structural Stability',color:'#34d399',melc:'S10FE-IIa-24',concept:'wind_stability',prime:'Think: wind force grows with the SQUARE of wind speed.',
     scenarios:[
       {wind:70,out:'unsafe',ci:2,sit:'Strong wind (70 km/h) violently shakes the rope hanging bridge over a swollen river.',q:'What should you do?',opts:['Cross — it looks intact','Hold rails tight and cross quickly','Wait — do not cross'],fb:'70 km/h creates dangerous unbalanced forces and bridge oscillation. Holding rails cannot counter this.',phy:'F_drag = ½ρC_d·A·v². At 70km/h (19.4m/s), wind force on body ≈ 150N. Oscillation amplifies danger.'},
       {wind:40,out:'risky',ci:0,sit:'Moderate wind (40 km/h) causes the hanging bridge to sway visibly side to side.',q:'What should you do?',opts:['Cross carefully, grip both rails','Do not cross at all','Run across fast'],fb:'40 km/h is below the dangerous threshold. Slow crossing while gripping both rope rails is manageable.',phy:'At 40km/h (11.1m/s), F_wind ≈ 60N. Counter-force from gripping rails allows balance with care.'},
@@ -418,242 +444,6 @@ const GRADES = {
 
 'use strict';
 // ═══════════════════════════════════════════════
-//  AUDIO SYSTEM — fully procedural WebAudio (no assets)
-// ═══════════════════════════════════════════════
-const AudioSys = {
-  ctx:null, master:null, amb:[], humNode:null, enabled:true, _nb:null,
-  init(){
-    if(this.ctx) return;
-    try{
-      this.ctx = new (window.AudioContext||window.webkitAudioContext)();
-      this.master = this.ctx.createGain();
-      this.master.gain.value = .5;
-      this.master.connect(this.ctx.destination);
-    }catch(e){}
-  },
-  resume(){ if(this.ctx && this.ctx.state==='suspended') this.ctx.resume(); },
-  noiseBuf(){
-    if(this._nb) return this._nb;
-    const b = this.ctx.createBuffer(1, this.ctx.sampleRate*2, this.ctx.sampleRate);
-    const d = b.getChannelData(0);
-    for(let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
-    this._nb = b; return b;
-  },
-  stopAmb(){
-    this.amb.forEach(a=>{ try{a.stop()}catch(e){} });
-    this.amb = [];
-    this.hum(false);
-  },
-  ambient(kind, level){
-    if(!this.ctx || !this.enabled) return;
-    const src = this.ctx.createBufferSource();
-    src.buffer = this.noiseBuf(); src.loop = true;
-    const f = this.ctx.createBiquadFilter();
-    const g = this.ctx.createGain();
-    if(kind==='rain'){ f.type='highpass'; f.frequency.value=1400; g.gain.value=Math.min(.22,.05+level*.004); }
-    else if(kind==='wind'){ f.type='bandpass'; f.frequency.value=380+level*3; f.Q.value=.7; g.gain.value=Math.min(.26,.04+level*.002); }
-    else { f.type='lowpass'; f.frequency.value=480; g.gain.value=.055; } // water lap
-    src.connect(f); f.connect(g); g.connect(this.master); src.start();
-    if(kind!=='rain'){ // slow gust/lap LFO
-      const lfo = this.ctx.createOscillator(), lg = this.ctx.createGain();
-      lfo.frequency.value = kind==='wind'?.16:.3;
-      lg.gain.value = g.gain.value*.55;
-      lfo.connect(lg); lg.connect(g.gain); lfo.start();
-      this.amb.push({stop:()=>{lfo.stop();src.stop();}});
-    } else this.amb.push({stop:()=>src.stop()});
-  },
-  hum(on){
-    if(!this.ctx || !this.enabled) return;
-    if(on && !this.humNode){
-      const o1 = this.ctx.createOscillator(), o2 = this.ctx.createOscillator();
-      o1.type='sine'; o1.frequency.value=108; o2.type='sine'; o2.frequency.value=112;
-      const g = this.ctx.createGain(); g.gain.value=.028;
-      o1.connect(g); o2.connect(g); g.connect(this.master);
-      o1.start(); o2.start();
-      this.humNode = {stop:()=>{try{o1.stop();o2.stop();}catch(e){}}};
-    } else if(!on && this.humNode){ this.humNode.stop(); this.humNode=null; }
-  },
-  tone(freq, dur, type, vol){
-    if(!this.ctx || !this.enabled) return;
-    const o = this.ctx.createOscillator();
-    o.type = type||'sine'; o.frequency.value = freq;
-    const g = this.ctx.createGain();
-    const t = this.ctx.currentTime;
-    g.gain.setValueAtTime(vol||.13, t);
-    g.gain.exponentialRampToValueAtTime(.001, t+dur);
-    o.connect(g); g.connect(this.master);
-    o.start(); o.stop(t+dur+.02);
-  },
-  correct(){ this.tone(660,.14); setTimeout(()=>this.tone(880,.28),120); },
-  wrong(){ this.tone(196,.32,'sawtooth',.07); },
-  click(){ this.tone(520,.045,'square',.035); },
-  step(inWater){ this.tone(inWater?170:110, .05, 'triangle', inWater?.06:.035); },
-  splashS(){ if(!this.ctx||!this.enabled)return;
-    const s=this.ctx.createBufferSource(); s.buffer=this.noiseBuf();
-    const f=this.ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=900;
-    const g=this.ctx.createGain(); const t=this.ctx.currentTime;
-    g.gain.setValueAtTime(.09,t); g.gain.exponentialRampToValueAtTime(.001,t+.25);
-    s.connect(f);f.connect(g);g.connect(this.master); s.start(); s.stop(t+.3); },
-  thunder(){
-    if(!this.ctx || !this.enabled) return;
-    const s = this.ctx.createBufferSource(); s.buffer = this.noiseBuf();
-    const f = this.ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=110;
-    const g = this.ctx.createGain(); const t = this.ctx.currentTime;
-    g.gain.setValueAtTime(.55, t);
-    g.gain.exponentialRampToValueAtTime(.001, t+2.4);
-    s.connect(f); f.connect(g); g.connect(this.master);
-    s.start(); s.stop(t+2.5);
-  },
-  pass(){ this.tone(523,.15); setTimeout(()=>this.tone(659,.15),130); setTimeout(()=>this.tone(784,.42),260); },
-  stumble(){ this.tone(150,.2,'sawtooth',.09); setTimeout(()=>this.tone(110,.3,'sawtooth',.08),150); }
-};
-
-// ═══════════════════════════════════════════════
-//  CINEMATIC FX
-// ═══════════════════════════════════════════════
-function radialTex(key, inner, outer){
-  if(texCache[key]) return texCache[key];
-  const cv = document.createElement('canvas'); cv.width = cv.height = 128;
-  const c = cv.getContext('2d');
-  const gr = c.createRadialGradient(64,64,4,64,64,64);
-  gr.addColorStop(0, inner); gr.addColorStop(1, outer);
-  c.fillStyle = gr; c.fillRect(0,0,128,128);
-  const tx = new THREE.CanvasTexture(cv);
-  texCache[key] = tx; return tx;
-}
-
-// Soft contact shadow under characters (ambient-occlusion feel)
-function blobShadow(r){
-  const m = new THREE.Mesh(
-    new THREE.PlaneGeometry(r*2, r*2),
-    new THREE.MeshBasicMaterial({ map: radialTex('blob','rgba(0,0,0,.42)','rgba(0,0,0,0)'), transparent:true, depthWrite:false })
-  );
-  m.rotation.x = -Math.PI/2;
-  m.position.y = .015;
-  return m;
-}
-
-// Volumetric-style billboard clouds
-function addClouds(count, dark){
-  const tx = radialTex(dark?'cloudD':'cloudL',
-    dark?'rgba(90,100,115,.85)':'rgba(255,255,255,.9)',
-    dark?'rgba(90,100,115,0)':'rgba(255,255,255,0)');
-  for(let i=0;i<count;i++){
-    const w = 18+Math.random()*26;
-    const cl = new THREE.Mesh(new THREE.PlaneGeometry(w, w*.4),
-      new THREE.MeshBasicMaterial({ map:tx, transparent:true, opacity:.5+Math.random()*.35, depthWrite:false, side:THREE.DoubleSide }));
-    cl.position.set((Math.random()-.5)*160, 26+Math.random()*22, (Math.random()-.5)*160);
-    scene.add(cl);
-    const spd = .3+Math.random()*.5;
-    animCallbacks.push((t,dt)=>{
-      cl.position.x += spd*dt*(1+G10Wind*.01);
-      if(cl.position.x > 90) cl.position.x = -90;
-      cl.lookAt(camera.position.x, cl.position.y, camera.position.z);
-    });
-  }
-}
-
-// Storm lightning: screen flash + exposure spike + delayed thunder
-function initLightning(){
-  let next = 3+Math.random()*6;
-  let flashT = -1;
-  const fd = document.getElementById('flash');
-  animCallbacks.push((t,dt)=>{
-    next -= dt;
-    if(next <= 0){
-      next = 4+Math.random()*8;
-      flashT = 0;
-      if(fd) fd.style.opacity = '.75';
-      renderer.toneMappingExposure = 2.2;
-      setTimeout(()=>AudioSys.thunder(), 300+Math.random()*900);
-    }
-    if(flashT >= 0){
-      flashT += dt;
-      const k = Math.max(0, 1-flashT*5);
-      if(fd) fd.style.opacity = (k*.75).toFixed(2);
-      renderer.toneMappingExposure = 1.12 + k*1.1;
-      if(k<=0) flashT = -1;
-    }
-  });
-}
-
-// Birds crossing the sky (fair weather ambience)
-function addBirds(n){
-  for(let i=0;i<n;i++){
-    const b = new THREE.Group();
-    const wm = new THREE.MeshBasicMaterial({color:0x1a1a22, side:THREE.DoubleSide});
-    const w1 = new THREE.Mesh(new THREE.PlaneGeometry(.5,.12), wm);
-    const w2 = w1.clone();
-    w1.position.x = -.25; w2.position.x = .25;
-    b.add(w1,w2);
-    b.position.set((Math.random()-.5)*60, 14+Math.random()*8, (Math.random()-.5)*60);
-    scene.add(b);
-    const spd = 2+Math.random()*2, ph = Math.random()*6.28;
-    animCallbacks.push((t,dt)=>{
-      b.position.x += spd*dt;
-      if(b.position.x>50) b.position.x = -50;
-      w1.rotation.z = Math.sin(t*9+ph)*.55;
-      w2.rotation.z = -Math.sin(t*9+ph)*.55;
-    });
-  }
-}
-
-// NPC villagers evacuating toward high ground (waypoint AI)
-function addVillagers(count, waterY){
-  const cols = [0x9a3412, 0x3730a3, 0x14532d, 0x86198f];
-  for(let i=0;i<count;i++){
-    const startZ = 2 - i*3.5, side = i%2?1:-1;
-    const v = makeHuman(side*(2.5+Math.random()*1.5), waterY, startZ, cols[i%4], 0x27272a, .92);
-    v.userData.baseY = waterY;
-    v.add(blobShadow(.5));
-    scene.add(v);
-    const target = new THREE.Vector3(side*5, waterY, -13.5);
-    animCallbacks.push((t,dt)=>{
-      const d = new THREE.Vector3().subVectors(target, v.position); d.y = 0;
-      const dist = d.length();
-      if(dist > .6){
-        d.normalize();
-        v.position.addScaledVector(d, .85*dt);
-        v.rotation.y = Math.atan2(d.x, d.z);
-        v.userData.moving = true;
-      } else v.userData.moving = false;
-    });
-  }
-}
-
-// Reusable water splash rings (spawned at moving feet / boat wake)
-function makeSplashPool(){
-  const pool = [];
-  const tx = radialTex('splash','rgba(230,245,255,.85)','rgba(230,245,255,0)');
-  for(let i=0;i<10;i++){
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(.5,.5),
-      new THREE.MeshBasicMaterial({map:tx, transparent:true, opacity:0, depthWrite:false}));
-    m.rotation.x = -Math.PI/2;
-    m.userData.life = -1;
-    scene.add(m); pool.push(m);
-  }
-  animCallbacks.push((t,dt)=>{
-    pool.forEach(m=>{
-      if(m.userData.life >= 0){
-        m.userData.life += dt;
-        const k = m.userData.life/.6;
-        if(k >= 1){ m.userData.life = -1; m.material.opacity = 0; }
-        else { m.material.opacity = .7*(1-k); m.scale.setScalar(.5+k*2.2); }
-      }
-    });
-  });
-  return {
-    spawn(x,y,z){
-      const m = pool.find(p=>p.userData.life<0);
-      if(!m) return;
-      m.position.set(x,y,z);
-      m.userData.life = 0; m.scale.setScalar(.5);
-    }
-  };
-}
-
-'use strict';
-// ═══════════════════════════════════════════════
 //  ULTRA ENGINE — cinematic renderer + physics scenes
 // ═══════════════════════════════════════════════
 let renderer, scene, camera, clock;
@@ -665,7 +455,30 @@ let cam = { base: new THREE.Vector3(0,6,-15), target: new THREE.Vector3(0,6,-15)
 let joy = { x:0, y:0, active:false };
 let zoomLevel = 1, G10Wind = 0;
 let texCache = {};
-let ctrl = { on:false, done:false, subject:null, scen:null, grade:0, proceed:true, camOff:new THREE.Vector3(), vel:new THREE.Vector3(), stab:0, splash:null, stepT:0, startPos:new THREE.Vector3() };
+// ── Quality tiers: auto-detected, manually overridable ──
+const REDUCED = matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+let PARTICLE_K = 1;
+const TIERS = ['low','medium','high'];
+let qTier = (()=>{ // heuristic: cores + pixel ratio
+  const c = navigator.hardwareConcurrency||2;
+  if(c>=8 && devicePixelRatio>1.3) return 'high';
+  if(c>=4) return 'medium';
+  return 'low';
+})();
+function applyTier(){
+  if(!renderer) return;
+  const t = qTier;
+  PARTICLE_K = t==='high'?1 : t==='medium'?.6 : .3;
+  renderer.setPixelRatio(t==='high'?Math.min(devicePixelRatio,2) : 1);
+  const sh = t!=='low';
+  if(renderer.shadowMap.enabled !== sh){
+    renderer.shadowMap.enabled = sh;
+    scene && scene.traverse(o=>{ if(o.material){ (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.needsUpdate=true); } });
+  }
+  const qb = document.getElementById('q-btn');
+  if(qb) qb.textContent = t==='high'?'HD':t==='medium'?'MD':'LO';
+}
+let ctrl = { on:false, done:false, subject:null, scen:null, grade:0, proceed:true, camOff:new THREE.Vector3() };
 let boatDyn = { tilt:.04, off:0, shift:false, sink:.05 };
 
 function initThree(){
@@ -704,19 +517,13 @@ function animate(){
     const wp = new THREE.Vector3();
     if(ctrl.subject){
       ctrl.subject.getWorldPosition(wp);
-      // Look-ahead: camera anticipates movement direction
-      const ahead = new THREE.Vector3(wp.x + ctrl.vel.x*.55, wp.y+1.2, wp.z + ctrl.vel.z*.55);
-      cam.look.lerp(ahead, .09);
+      cam.look.lerp(new THREE.Vector3(wp.x, wp.y+1.2, wp.z), .1);
       cam.target.copy(wp).add(ctrl.camOff);
     }
-    camera.position.lerp(cam.target, .055);
+    camera.position.lerp(cam.target, .06);
     camera.lookAt(cam.look);
-    // Subtle FOV kick with speed (cinematic momentum feel)
-    const spd = ctrl.vel.length();
-    camera.fov += ((55/zoomLevel + spd*1.6) - camera.fov) * .06;
   } else {
     // ── OBSERVE PHASE: joystick orbits camera around look-target ──
-    document.getElementById('ui').classList.toggle('uidim', joy.active);
     if(joy.active){
       cam.yaw += joy.x * dt * 1.4;
       cam.pitch += joy.y * dt * 0.9;
@@ -883,6 +690,7 @@ function makeWater(w,d,depth,cShallow,cDeep,segs){
 
 // ─── RAIN ───
 function makeRain(count,aw,ah,ad,intensity){
+  count = Math.max(200, Math.floor(count*PARTICLE_K));
   const p = new Float32Array(count*3), v = new Float32Array(count);
   for(let i=0;i<count;i++){
     p[i*3]=(Math.random()-.5)*aw; p[i*3+1]=Math.random()*ah; p[i*3+2]=(Math.random()-.5)*ad;
@@ -1278,23 +1086,14 @@ function buildFloodScene(scen, grade){
   gatewayGroup = makeGateway(0,2.3,13,0x38bdf8);
   scene.add(gatewayGroup);
 
-  // ── CINEMATIC LAYER ──
-  humanGroup.add(blobShadow(.55));
-  addClouds(mood==='sunny'?6:10, mood!=='sunny');
-  if(mood==='sunny') addBirds(3);
-  if(mood==='storm') initLightning();
-  if(depth < .55) addVillagers(2, cy);            // NPCs evacuating to high ground
-  AudioSys.stopAmb();
-  if(rmm>0 || depth>.4) AudioSys.ambient('rain', Math.max(10,rmm));
-  AudioSys.ambient('water', 1);
-
   cam.base.set(6,5,-13); cam.look.set(0,1.4,2);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
 }
 
 function buildBoatScene(scen){
   clearScene();
-  const {cap,load,dist} = scen;
+  const lab = !!scen.lab;
+  const {cap,load,dist} = lab ? {cap:9,load:0,dist:'even'} : scen;
   const over = load>cap, uneven = dist==='uneven', standing = dist==='standing', shifting = dist==='shifting';
   setupLighting('sunny');
   skyDome(0x3a78b8,0xc0d8e8);
@@ -1361,11 +1160,6 @@ function buildBoatScene(scen){
   gatewayGroup = makeGateway(9,2.3,0,0xa78bfa);
   gatewayGroup.rotation.y = Math.PI/2;
   scene.add(gatewayGroup);
-
-  addClouds(7, false);
-  addBirds(4);
-  AudioSys.stopAmb();
-  AudioSys.ambient('water', 1);
 
   cam.base.set(-7,4.5,-12); cam.look.set(0,.5,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
@@ -1479,14 +1273,6 @@ function buildBridgeScene(scen){
   gatewayGroup.rotation.y = Math.PI/2;
   scene.add(gatewayGroup);
 
-  humanGroup.add(blobShadow(.55));
-  addClouds(wind>50?11:6, wind>50);
-  if(wind<=40) addBirds(3);
-  if(wind>80) initLightning();
-  AudioSys.stopAmb();
-  AudioSys.ambient('wind', wind);
-  if(wind>60) AudioSys.ambient('rain', 20);
-
   cam.base.set(-12,5,-13); cam.look.set(0,.5,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
 }
@@ -1572,10 +1358,6 @@ function buildMenuBackground(){
   }
   rain = makeRain(2200,80,30,80,.5);
   scene.add(rain);
-  addClouds(8, false);
-  AudioSys.stopAmb();
-  AudioSys.ambient('rain', 8);
-  AudioSys.ambient('water', 1);
   cam.base.set(0,8,-25); cam.look.set(0,0,0);
   cam.target.copy(cam.base); camera.position.copy(cam.base);
   animCallbacks.push((t)=>{
@@ -1591,6 +1373,219 @@ function missionText(proceed, grade){
   if(grade===10) return proceed ? 'Walk across the hanging bridge to the gateway' : 'Retreat carefully off the bridge to the safe-zone gateway';
   return proceed ? 'Wade across the floodwater to the gateway' : 'Retreat to the high-ground gateway behind you';
 }
+
+// ═══════════════════════════════════════════════
+//  BUOYANCY LABORATORY — Predict → Observe → Explain
+//  resolve() is computed physics, not an answer lookup.
+// ═══════════════════════════════════════════════
+let LAB = null;
+
+function labMaxSafe(w){ return Math.floor((w.rho*w.hullV - w.hullM)/w.pM); }
+function labResolve(w, n){
+  const W = (w.hullM + n*w.pM) * w.g;                    // total weight (N)
+  const V_needed = W / (w.rho * w.g);                    // volume that must be displaced (m³)
+  const floats = V_needed <= w.hullV;
+  const F_b_max = w.rho * w.g * w.hullV;                 // max buoyant force (N)
+  return { floats, W, F_b_max, V_needed, freeboard: Math.max(0, 1 - V_needed/w.hullV) };
+}
+
+function labInit(scen){
+  LAB = { scen, w:scen.world, pred:null, locked:false, loaded:0, humans:[], busy:false };
+  const ce = document.getElementById('choices');
+  ce.innerHTML = `
+  <div class="lab-panel" role="group" aria-label="Buoyancy laboratory controls">
+    <div class="lab-attempt" id="lab-att">Attempt 1</div>
+    <div id="lab-predict">
+      <div class="lab-prompt">🔒 PREDICT first — how many people can this boat safely carry?</div>
+      <div class="lab-step">
+        <button onclick="labPred(-1)" aria-label="Decrease prediction">−</button>
+        <span class="lab-num" id="lab-pn">0</span>
+        <button onclick="labPred(1)" aria-label="Increase prediction">+</button>
+      </div>
+      <button class="lab-go" onclick="labLock()" aria-label="Lock in prediction">Lock My Prediction</button>
+      <div style="font-size:.66rem;color:var(--txd);margin-top:.5rem">Your prediction is recorded before you can touch the boat. That's the point.</div>
+    </div>
+    <div id="lab-run" style="display:none">
+      <div class="lab-prompt" id="lab-run-p">Now load the boat. Watch the waterline.</div>
+      <div class="lab-step">
+        <button onclick="labBoard(-1)" aria-label="Remove one passenger">−</button>
+        <span class="lab-num" id="lab-ln">0</span>
+        <button onclick="labBoard(1)" aria-label="Board one passenger">+</button>
+      </div>
+      <div class="gauge" aria-label="Buoyancy gauge">
+        <div class="gauge-row"><span class="gauge-lbl">Weight W</span><div class="gauge-bw"><div class="gauge-b" id="gW" style="background:linear-gradient(90deg,#f59e0b,#ef4444)"></div></div><span class="gauge-val" id="gWv">–</span></div>
+        <div class="gauge-row"><span class="gauge-lbl">Max buoyancy F_b</span><div class="gauge-bw"><div class="gauge-b" id="gF" style="background:linear-gradient(90deg,#22c55e,#4ade80);width:100%"></div></div><span class="gauge-val" id="gFv">–</span></div>
+        <div class="gauge-row"><span class="gauge-lbl">Freeboard</span><div class="gauge-bw"><div class="gauge-b" id="gB" style="background:#38bdf8"></div></div><span class="gauge-val" id="gBv">–</span></div>
+      </div>
+      <button class="lab-go" id="lab-launch" onclick="labLaunch()" aria-label="Launch the boat">🚤 LAUNCH</button>
+      <div class="lab-hint" id="lab-hint"></div>
+    </div>
+  </div>`;
+}
+function labPred(d){
+  if(!LAB || LAB.locked) return;
+  LAB.pred = Math.max(0, Math.min(LAB.w.avail, (LAB.pred||0)+d));
+  document.getElementById('lab-pn').textContent = LAB.pred;
+  AudioSysSafe('click');
+}
+function labLock(){
+  if(!LAB || LAB.pred===null){ LAB.pred = 0; }
+  LAB.locked = true;
+  GS.pred = LAB.pred;
+  // Misconception screen at commit time (Section 3.1)
+  let mis = '';
+  const max = labMaxSafe(LAB.w);
+  if(LAB.pred<=1 && LAB.w.hullM>=100) mis = 'weight_determines_sinking';
+  else if(LAB.pred>=LAB.w.avail && LAB.w.avail>max) mis = 'capacity_ignored';
+  if(mis) logRow('prediction_flag', mis);
+  document.getElementById('lab-predict').style.display = 'none';
+  document.getElementById('lab-run').style.display = '';
+  document.getElementById('lab-run-p').textContent = `You predicted ${LAB.pred}. Now load the boat and watch the waterline.`;
+  labGauge();
+}
+function labBoard(d){
+  if(!LAB || !LAB.locked || LAB.busy) return;
+  LAB.loaded = Math.max(0, Math.min(LAB.w.avail, LAB.loaded+d));
+  document.getElementById('lab-ln').textContent = LAB.loaded;
+  labVisual();
+  labGauge();
+  AudioSysSafe('click');
+}
+function labVisual(){
+  if(!boatGroup) return;
+  // Remove & re-place passengers (max 8 visible)
+  LAB.humans.forEach(h=>boatGroup.remove(h));
+  LAB.humans = [];
+  const n = Math.min(LAB.loaded, 8);
+  const pos = getPassengerPos(n, false);
+  const cols = [0x1e3a8a,0x7c2d12,0x065f46,0x5b21b6,0x92400e,0x1e40af,0x831843,0x064e3b];
+  pos.forEach((p,i)=>{
+    const h = makeHuman(p.x, p.y, p.z, cols[i%8], 0x2a1a3a, .78);
+    boatGroup.add(h); LAB.humans.push(h);
+  });
+  // The waterline responds to REAL displaced volume
+  const r = labResolve(LAB.w, LAB.loaded);
+  const ratio = Math.min(1.15, r.V_needed / LAB.w.hullV);
+  boatDyn.sink = .12 - ratio*.34;
+  boatDyn.tilt = .04 + Math.max(0, ratio-.85)*.45;
+}
+function labGauge(){
+  const r = labResolve(LAB.w, LAB.loaded);
+  const wPct = Math.min(100, (r.W/r.F_b_max)*100);
+  document.getElementById('gW').style.width = wPct+'%';
+  document.getElementById('gWv').textContent = Math.round(r.W)+' N';
+  document.getElementById('gFv').textContent = Math.round(r.F_b_max)+' N';
+  document.getElementById('gB').style.width = (r.freeboard*100)+'%';
+  document.getElementById('gBv').textContent = (r.freeboard*100).toFixed(0)+'%';
+  const lb = document.getElementById('lab-launch');
+  lb.style.background = r.floats
+    ? (r.freeboard<.08 ? 'linear-gradient(135deg,#d97706,#f59e0b)' : 'linear-gradient(135deg,#16a34a,#22c55e)')
+    : 'linear-gradient(135deg,#dc2626,#ef4444)';
+  // Escalating scaffold (Section 3.3): attempt 3+ unlocks the working
+  if(GS.attempts>=2){
+    const h = document.getElementById('lab-hint');
+    h.style.display = 'block';
+    h.textContent = `Hint: the boat floats while W ≤ ρ·g·V_hull. Here that means (${LAB.w.hullM} + n×${LAB.w.pM}) ≤ ${LAB.w.rho}×${LAB.w.hullV} = ${Math.round(LAB.w.rho*LAB.w.hullV)} kg of displaced water. Solve for n.`;
+  }
+}
+function labLaunch(){
+  if(!LAB || LAB.busy) return;
+  LAB.busy = true;
+  GS.attempts++;
+  document.getElementById('lab-att').textContent = 'Attempt '+GS.attempts;
+  const r = labResolve(LAB.w, LAB.loaded);
+  const max = labMaxSafe(LAB.w);
+  if(r.floats){
+    // Cruise forward briefly, then explain
+    let steps = 0;
+    const iv = setInterval(()=>{
+      if(boatGroup) boatGroup.position.x += .045;
+      if(++steps>26){ clearInterval(iv); labExplain(true, r, max); }
+    }, 33);
+  } else {
+    // SWAMP — the water sim does the teaching. Framed around agency, not casualties (Section 10).
+    logRow('swamped', LAB.loaded>max ? 'overload_freeboard' : '');
+    AudioSysSafe('wrong');
+    if(navigator.vibrate) navigator.vibrate([80,50,120]);
+    let k = 0;
+    const iv = setInterval(()=>{
+      k += .04;
+      boatDyn.sink = .12 - Math.min(1.15,(r.V_needed/LAB.w.hullV))*.34 - k*.5;
+      boatDyn.tilt = .04 + k*.5;
+      if(k>=.7){ clearInterval(iv); labExplain(false, r, max); }
+    }, 40);
+  }
+}
+function labExplain(floated, r, max){
+  document.getElementById('fb-wrap').classList.add('on');
+  const w = LAB.w;
+  const predTxt = `You predicted ${LAB.pred}. `;
+  document.getElementById('fb-ico').textContent = floated ? '✓' : '↺';
+  document.getElementById('fb-ico').className = 'fbv-ico ' + (floated?'ok':'no');
+  const oe = document.getElementById('fb-outcome');
+  let diag = '';
+  const nb = document.getElementById('next-btn');
+  const C = (l,v)=>`<div class="chip"><div class="chip-l">${l}</div><div class="chip-v">${v}</div></div>`;
+  document.getElementById('fb-chips').innerHTML =
+    C('Loaded', LAB.loaded+' persons') + C('W total', Math.round(r.W)+' N') +
+    C('F_b max', Math.round(r.F_b_max)+' N') + C('V needed', r.V_needed.toFixed(3)+' m³') +
+    C('Freeboard', (r.freeboard*100).toFixed(0)+'%');
+
+  if(floated){
+    const full = LAB.loaded===max, near = LAB.loaded===max-1;
+    document.getElementById('fb-verdict').textContent =
+      LAB.pred===LAB.loaded && full ? 'Your prediction matched the physics.' : 'It floats.';
+    oe.className = 'fb-out ' + (full?'fo-safe':near?'fo-risky':'fo-risky');
+    oe.textContent = full ? `✓ FLOATED — ${LAB.loaded} aboard, freeboard held`
+      : `FLOATED — but capacity is ${max}`;
+    if(full){
+      diag = predTxt + `${LAB.loaded} people, and the freeboard held. The displaced water (${r.V_needed.toFixed(2)} m³) weighs more than boat + passengers — exactly Archimedes' principle at work.`;
+      if(LAB.scen.salt) diag += ' Notice: in seawater (ρ=1025), this same hull carries one MORE person than in fresh water. Denser fluid → more buoyant force per m³ displaced.';
+    } else if(LAB.loaded < max){
+      diag = predTxt + `It floats — but you left ${max-LAB.loaded} ${max-LAB.loaded===1?'person':'people'} at the dock. The physics says this hull can displace enough water for ${max}. In an evacuation, under-loading has a cost too. Want full marks? Find the true maximum.`;
+    }
+    // Score & log on first successful launch
+    if(!GS.answered){
+      GS.answered = true;
+      const base = LAB.loaded===max ? 1 : LAB.loaded===max-1 ? .7 : .4;
+      GS.scores.push(attemptScore(base));
+      logRow('floated', LAB.loaded<max ? 'underloaded' : '');
+      updateScore();
+      gatewayActive = true;
+    }
+    nb.textContent = LAB.loaded<max ? '↺ Reload and try for the true maximum' : '🎮 Take Control — Ferry Them Across';
+    nb.onclick = LAB.loaded<max ? labRetry : startControl;
+  } else {
+    document.getElementById('fb-verdict').textContent = 'The bancá swamped — attempt '+GS.attempts;
+    oe.className = 'fb-out fo-unsafe';
+    oe.textContent = '✗ SWAMPED AT '+LAB.loaded+' PEOPLE';
+    // Misconception-mapped response, in the Section 3.2 order:
+    // observed → concede → correct → experiment → formalism
+    if(LAB.pred >= LAB.loaded){
+      diag = `${predTxt}It swamped at ${LAB.loaded} — your model over-estimated. What's right in your thinking: a bigger boat CAN carry more, and this hull did lift ${Math.round(r.F_b_max/w.g - w.hullM)} kg of passengers before the rail went under. What's missing: the hull can only displace ${w.hullV} m³ of water — that displaced water weighs ${Math.round(w.rho*w.hullV*w.g)} N, and that is the CEILING on total weight. `
+        + `Experiment: reload from zero and add people ONE at a time, watching the freeboard bar. Stop just before it empties. That number is the answer — measured, not guessed. `
+        + `Formally: floats ⟺ ρ·g·V_hull ≥ (m_hull + n·m_person)·g.`;
+    } else {
+      diag = `${predTxt}You loaded ${LAB.loaded} — more than your own prediction — and the water settled it. Everyone waded back to the dock safely, but the crossing failed and the supplies got soaked. `
+        + `Trust your reasoning: work out n from ρ·g·V_hull ≥ W, then load exactly that.`;
+    }
+    nb.textContent = '↺ Unload and Try Again';
+    nb.onclick = labRetry;
+  }
+  document.getElementById('fb-text').textContent = diag;
+  document.getElementById('fb-physics').textContent =
+    `F_b = ρ·g·V = ${w.rho}×9.81×${w.hullV} = ${Math.round(r.F_b_max)} N max · W = (${w.hullM}+${LAB.loaded}×${w.pM})×9.81 = ${Math.round(r.W)} N · floats ⟺ W ≤ F_b`;
+}
+function labRetry(){
+  document.getElementById('fb-wrap').classList.remove('on');
+  LAB.busy = false;
+  LAB.loaded = 0;
+  document.getElementById('lab-ln').textContent = '0';
+  if(boatGroup) boatGroup.position.x = 0;
+  boatDyn.sink = .12; boatDyn.tilt = .04;
+  labVisual(); labGauge();
+}
+function AudioSysSafe(m){ try{ if(typeof AudioSys!=='undefined' && AudioSys[m]) AudioSys[m](); }catch(e){} }
 
 function startControl(){
   document.getElementById('fb-wrap').classList.remove('on');
@@ -1625,12 +1620,6 @@ function startControl(){
   if(GS.grade===9) applyBoatCorrection(scen);
 
   ctrl.subject = GS.grade===9 ? boatGroup : humanGroup;
-  ctrl.vel.set(0,0,0); ctrl.stab = 0; ctrl.stepT = 0;
-  ctrl.startPos.copy(ctrl.subject.position);
-  ctrl.splash = makeSplashPool();
-  document.body.classList.add('cinema');       // letterbox bars
-  document.getElementById('m-stab').classList.remove('on');
-  AudioSys.hum(true);                          // gateway hum
 
   // Chase camera offsets per mode
   if(GS.grade===9) ctrl.camOff.set(-6, 4.5, -7);
@@ -1642,6 +1631,7 @@ function startControl(){
 
 function applyBoatCorrection(scen){
   if(!boatGroup) return;
+  if(scen.lab) return; // lab: the student's own loading is the corrected configuration
   // Remove passengers beyond capacity (decision executed: extras stay ashore)
   const humans = boatGroup.children.filter(c=>c.userData && c.userData.human);
   const excess = humans.length - scen.cap;
@@ -1665,137 +1655,59 @@ function updateControl(dt, t){
   const gdist = fwd.length();
   if(gdist > .001) fwd.normalize();
   const right = new THREE.Vector3(-fwd.z, 0, fwd.x);
-  const input = new THREE.Vector3().addScaledVector(fwd, joy.y).addScaledVector(right, joy.x);
-  if(input.length() > 1) input.normalize();
-
-  // ── NATURAL ACCELERATION / DECELERATION ──
-  let maxSpd = 3, accel = 9;
-  let inWater = false, hazardPush = 0;
-
-  if(ctrl.grade===7 || ctrl.grade===8){
-    const depth = scen.depth||0, vel = scen.vel||0;
-    inWater = ctrl.proceed && Math.abs(s.position.x) < 7 && s.position.z > -6 && s.position.z < 8;
-    if(inWater){
-      maxSpd = 3 * Math.max(.38, 1 - depth*.95);  // deep water slows you
-      accel = 5;                                   // sluggish in water
-      hazardPush = vel * .45;                      // current shoves sideways
-    }
-  } else if(ctrl.grade===9){
-    maxSpd = 3.4; accel = 4.5;                     // boat momentum: slow to start/stop
-  } else {
-    const wind = scen.wind||0;
-    const onBridge = Math.abs(s.position.x) <= 7.2;
-    maxSpd = 2.4 * (wind>60 ? .6 : 1);
-    accel = 8;
-    if(onBridge) hazardPush = wind * .012;         // wind gusts shove you
-  }
-
-  const desired = input.clone().multiplyScalar(maxSpd);
-  const k = 1 - Math.exp(-accel*dt);
-  ctrl.vel.lerp(desired, k);
-  const moving = ctrl.vel.length() > .25;
+  const mv = new THREE.Vector3().addScaledVector(fwd, joy.y).addScaledVector(right, joy.x);
+  const mag = mv.length();
+  const moving = mag > .12;
   if(humanGroup && humanGroup.userData) humanGroup.userData.moving = (ctrl.grade!==9) && moving;
 
-  // Integrate motion
-  s.position.x += ctrl.vel.x * dt;
-  s.position.z += ctrl.vel.z * dt;
-
-  // ── ADAPTIVE HAZARD AI: environment pushes back, stability drains ──
-  const stabEl = document.getElementById('m-stab');
   if(ctrl.grade===7 || ctrl.grade===8){
-    if(inWater){
-      const vel = scen.vel||0;
-      const gust = (Math.sin(t*1.7)*.5 + .6);
-      s.position.x += hazardPush * gust * dt;       // current drift (varies like real flow)
-      ctrl.stab += hazardPush * .22 * dt * (moving ? .7 : 1.3); // standing still = swept faster
-      if(stabEl) stabEl.classList.add('on');
-      // Footstep splashes + sound
-      if(moving){
-        ctrl.stepT += dt;
-        if(ctrl.stepT > .34){
-          ctrl.stepT = 0;
-          if(ctrl.splash) ctrl.splash.spawn(s.position.x, (scen.depth||0)*.5+.03, s.position.z);
-          AudioSys.step(true);
-        }
-      }
-    } else {
-      ctrl.stab = Math.max(0, ctrl.stab - .5*dt);   // recover on dry ground
-      if(moving){ ctrl.stepT += dt; if(ctrl.stepT>.4){ ctrl.stepT=0; AudioSys.step(false); } }
-    }
+    // ── WADING: water depth slows you, current drags you downstream ──
+    const depth = scen.depth||0, vel = scen.vel||0;
+    const inFlood = ctrl.proceed && Math.abs(s.position.x) < 7 && s.position.z > -6 && s.position.z < 8;
+    const speed = 3 * (inFlood ? Math.max(.4, 1 - depth*.9) : 1);
+    s.position.x += mv.x * speed * dt;
+    s.position.z += mv.z * speed * dt;
+    if(inFlood) s.position.x += vel * .35 * dt; // current pushes sideways
     s.position.x = THREE.MathUtils.clamp(s.position.x, -6, 6);
     s.position.z = THREE.MathUtils.clamp(s.position.z, -15.5, 15);
-    if(moving) s.rotation.y = Math.atan2(ctrl.vel.x, ctrl.vel.z);
+    if(moving) s.rotation.y = Math.atan2(mv.x, mv.z);
   }
   else if(ctrl.grade===9){
+    // ── BOAT: momentum steering, gentle heading turn ──
+    const speed = 3.2;
+    s.position.x += mv.x * speed * dt;
+    s.position.z += mv.z * speed * dt;
     s.position.x = THREE.MathUtils.clamp(s.position.x, -6.5, 10);
     s.position.z = THREE.MathUtils.clamp(s.position.z, -6, 6);
     if(moving){
-      const target = -Math.atan2(ctrl.vel.z, ctrl.vel.x);
-      s.rotation.y += (target - s.rotation.y) * .035;
-      // Boat wake splashes
-      ctrl.stepT += dt;
-      if(ctrl.stepT > .28){
-        ctrl.stepT = 0;
-        if(ctrl.splash) ctrl.splash.spawn(s.position.x - Math.cos(s.rotation.y)*2.2, .12, s.position.z + Math.sin(s.rotation.y)*2.2);
-        if(Math.random()<.4) AudioSys.splashS();
-      }
+      const target = Math.atan2(mv.z, mv.x) * -1;
+      s.rotation.y += (target - s.rotation.y) * .04;
     }
   }
   else {
+    // ── BRIDGE: follow the deck sag, wind gusts shove you sideways ──
     const wind = scen.wind||0;
+    const speed = 2.3 * (wind>60 ? .65 : 1);
+    s.position.x += mv.x * speed * dt;
+    s.position.z += mv.z * speed * dt;
     const onBridge = Math.abs(s.position.x) <= 7.2;
     if(onBridge){
-      // Gusts: rhythmic + random bursts the player must fight against
-      const gust = Math.sin(t*2.3)*.55 + Math.sin(t*5.1)*.3 + .45;
-      s.position.z += gust * wind * .00065;
-      // Stability drains near the edge, or in strong wind
-      const edge = Math.abs(s.position.z) / .55;
-      ctrl.stab += (edge*.35 + wind*.002) * dt;
-      if(edge < .5) ctrl.stab = Math.max(0, ctrl.stab - .35*dt);
+      // Wind push: rhythmic gusts + steady lean the player must fight
+      s.position.z += (Math.sin(t*2.3)*.6 + .4) * wind * .0006;
       s.position.z = THREE.MathUtils.clamp(s.position.z, -.55, .55);
       const tt = THREE.MathUtils.clamp((s.position.x+7)/14, 0, 1);
       s.position.y = 1 - Math.sin(tt*Math.PI)*1.15 + .08;
-      if(stabEl) stabEl.classList.add('on');
-      if(moving){ ctrl.stepT += dt; if(ctrl.stepT>.36){ ctrl.stepT=0; AudioSys.step(false); } }
     } else {
-      s.position.y += (0.15 - s.position.y) * .1;
+      s.position.y += (0.15 - s.position.y) * .1; // step off onto the bank
       s.position.z = THREE.MathUtils.clamp(s.position.z, -3, 3);
-      ctrl.stab = Math.max(0, ctrl.stab - .6*dt);
     }
     s.position.x = THREE.MathUtils.clamp(s.position.x, -12, 10);
-    if(moving) s.rotation.y = Math.atan2(ctrl.vel.x, ctrl.vel.z);
+    if(moving) s.rotation.y = Math.atan2(mv.x, mv.z);
   }
-
-  // Stability meter + stumble knockback
-  ctrl.stab = Math.min(1.05, ctrl.stab);
-  const fill = document.getElementById('m-stab-fill');
-  if(fill) fill.style.width = (Math.min(1,ctrl.stab)*100).toFixed(0)+'%';
-  if(ctrl.stab >= 1) stumble(s);
 
   // Distance HUD + gateway collision
   document.getElementById('m-dist').textContent = gdist.toFixed(1) + ' m';
   if(gdist < 2.2) controlSuccess();
-}
-
-// Hazard wins this round: knock the player back toward safety
-function stumble(s){
-  ctrl.stab = 0;
-  ctrl.vel.set(0,0,0);
-  AudioSys.stumble();
-  if(navigator.vibrate) navigator.vibrate([90,50,90]);
-  // Knockback: return partway toward the start point
-  s.position.lerp(ctrl.startPos, .55);
-  if(ctrl.grade===10) s.position.z = 0;
-  const st = document.getElementById('stumble');
-  st.style.display = 'block';
-  setTimeout(()=>{ st.style.display = 'none'; }, 1600);
-  // Camera shake
-  const orig = ctrl.camOff.clone();
-  let n = 0;
-  const iv = setInterval(()=>{
-    ctrl.camOff.copy(orig).add(new THREE.Vector3((Math.random()-.5)*.8,(Math.random()-.5)*.5,(Math.random()-.5)*.8));
-    if(++n > 7){ clearInterval(iv); ctrl.camOff.copy(orig); }
-  }, 45);
 }
 
 function controlSuccess(){
@@ -1808,24 +1720,56 @@ function controlSuccess(){
   document.getElementById('m-text').textContent = '✓ GATEWAY PASSED — Level Complete';
   document.getElementById('m-dist').textContent = 'advancing...';
   if(navigator.vibrate) navigator.vibrate([50,40,50,40,90]);
-  AudioSys.pass();
-  AudioSys.hum(false);
-  document.body.classList.remove('cinema');
   const stick = document.getElementById('joy-stick');
   stick.style.boxShadow = '0 0 28px rgba(34,197,94,.9), 0 4px 15px rgba(0,0,0,.6)';
   setTimeout(()=>{ stick.style.boxShadow = ''; }, 900);
   setTimeout(()=>{
     const n = GS.idx+1;
     if(n >= GS.gd.scenarios.length) transitionTo(showResults);
-    else transitionTo(()=>loadScenario(n));
+    else {
+      const nx = GS.gd.scenarios[n];
+      const obj = (nx.lab && nx.objective) ? nx.objective : (GS.gd.topic + (GS.gd.prime ? ' — ' + GS.gd.prime : ''));
+      transitionTo(()=>loadScenario(n), obj);
+    }
   }, 1100);
 }
 
+// ═══ TELEMETRY — teacher-facing results (CSV) ═══
+const LOG = [];
+let studentName = null;
+function logRow(outcome, mis){
+  const scen = GS.gd.scenarios[GS.idx];
+  LOG.push({
+    name: studentName||'anonymous', grade: GS.grade, id: GS.idx+1,
+    melc: GS.gd.melc||'', concept: GS.gd.concept||'',
+    prediction: GS.pred!==''?GS.pred:'',
+    outcome, attempts: GS.attempts,
+    misc: mis||'', seconds: Math.round((Date.now()-GS.t0)/1000)
+  });
+}
+function downloadCSV(){
+  const head = 'student,grade,scenario,melc,concept,prediction,outcome,attempts,misconception,seconds';
+  const rows = LOG.map(r=>[r.name,r.grade,r.id,r.melc,r.concept,r.prediction,r.outcome,r.attempts,r.misc,r.seconds]
+    .map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(','));
+  const blob = new Blob([head+'\n'+rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'click2survive_results.csv';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+}
+function showPhysics(){ document.getElementById('phys-modal').style.display = 'block'; }
+
 // ═══ GAME LOGIC ═══
-let GS = { grade:null, idx:0, scores:[], gd:null, answered:false };
+let GS = { grade:null, idx:0, scores:[], gd:null, answered:false, attempts:0, t0:0, pred:'' };
 
 function startGrade(g){
-  GS = { grade:g, idx:0, scores:[], gd:GRADES[g], answered:false };
+  if(studentName===null){
+    try{ studentName = (window.prompt('Student name (optional — appears in the teacher\'s results file):','')||'anonymous').slice(0,40); }
+    catch(e){ studentName = 'anonymous'; }
+  }
+  GS = { grade:g, idx:0, scores:[], gd:GRADES[g], answered:false, attempts:0, t0:Date.now(), pred:'' };
+  applyTier();
   G10Wind = 0;
   document.getElementById('hud-ico').style.background = GRADES[g].color;
   transitionTo(()=>{
@@ -1856,13 +1800,14 @@ function updateDots(){
   }
 }
 function updateScore(){
-  document.getElementById('score-n').textContent = GS.scores.filter(s=>s===1).length;
+  document.getElementById('score-n').textContent = GS.scores.length;
 }
 
 function loadScenario(idx){
   const scen = GS.gd.scenarios[idx];
   if(!scen){ showResults(); return; }
   GS.idx = idx; GS.answered = false;
+  GS.attempts = 0; GS.t0 = Date.now(); GS.pred = '';
   gatewayActive = gatewayPassed = false;
   ctrl.on = false; ctrl.done = false;
   document.getElementById('fb-wrap').classList.remove('on');
@@ -1870,21 +1815,23 @@ function loadScenario(idx){
   document.getElementById('mission').style.display = 'none';
   ['scen-card','choices','dots'].forEach(id=>{ document.getElementById(id).style.display = ''; });
   document.querySelector('.joy-label').textContent = '⟁ Look';
-  document.body.classList.remove('cinema');
-  document.getElementById('ui').classList.remove('uidim');
-  AudioSys.hum(false);
   updateDots();
   document.getElementById('sc-num').textContent = `Scenario ${idx+1} of ${GS.gd.scenarios.length}`;
   document.getElementById('sc-sit').textContent = scen.sit;
-  document.getElementById('sc-q').textContent = scen.q;
+  document.getElementById('sc-q').textContent = scen.lab ? (scen.objective||'') : scen.q;
   const ce = document.getElementById('choices'); ce.innerHTML = '';
-  scen.opts.forEach((o,i)=>{
-    const b = document.createElement('button');
-    b.className = 'ch-btn';
-    b.innerHTML = `<strong style="opacity:.5;margin-right:6px">${String.fromCharCode(65+i)}</strong>${o}`;
-    b.onclick = ()=>handleChoice(i);
-    ce.appendChild(b);
-  });
+  if(scen.lab){
+    labInit(scen);
+  } else {
+    scen.opts.forEach((o,i)=>{
+      const b = document.createElement('button');
+      b.className = 'ch-btn';
+      b.setAttribute('aria-label', 'Answer '+String.fromCharCode(65+i)+': '+o);
+      b.innerHTML = `<strong style="opacity:.5;margin-right:6px">${String.fromCharCode(65+i)}</strong>${o}`;
+      b.onclick = ()=>handleChoice(i);
+      ce.appendChild(b);
+    });
+  }
   updateParams(scen);
   updatePAGASA(scen);
   const g = GS.grade;
@@ -1916,6 +1863,16 @@ function updateParams(scen){
   const p = document.getElementById('params-panel');
   p.style.display = 'block';
   let h = '<div class="pp-title">Live Conditions</div>';
+  if(scen.lab){
+    const w = scen.world;
+    h = '<div class="pp-title">World Constants</div>' +
+      `<div class="pp-row"><div class="pp-head"><span class="pp-label">Water density ρ</span><span class="pp-val ${scen.salt?'c-risky':'c-safe'}">${w.rho} kg/m³</span></div></div>` +
+      `<div class="pp-row"><div class="pp-head"><span class="pp-label">Hull volume V</span><span class="pp-val">${w.hullV} m³</span></div></div>` +
+      `<div class="pp-row"><div class="pp-head"><span class="pp-label">Hull mass</span><span class="pp-val">${w.hullM} kg</span></div></div>` +
+      `<div class="pp-row"><div class="pp-head"><span class="pp-label">Per person</span><span class="pp-val">${w.pM} kg</span></div></div>` +
+      `<div class="pp-row"><div class="pp-head"><span class="pp-label">g</span><span class="pp-val">9.81 m/s²</span></div></div>`;
+    p.innerHTML = h; return;
+  }
   if(scen.depth!==undefined) h += paramRow('Water Depth', scen.depth.toFixed(2)+'m', scen.depth,.29,.5,1);
   if(scen.vel!==undefined) h += paramRow('Current', scen.vel.toFixed(1)+' m/s', scen.vel,.49,1,2);
   if(scen.rain!==undefined) h += paramRow('Rainfall', scen.rain+' mm/hr', scen.rain,14.9,30,50);
@@ -1947,33 +1904,58 @@ function updatePAGASA(scen){
   }
 }
 
+function attemptScore(base){
+  // Process-weighted: attempt 1 = full; decays gently; floored so students are not punished into disengagement.
+  return +(base * Math.max(.5, Math.pow(1/GS.attempts, .3))).toFixed(2);
+}
 function handleChoice(i){
   if(GS.answered) return;
-  GS.answered = true;
   const scen = GS.gd.scenarios[GS.idx];
   const ok = i === scen.ci;
-  GS.scores.push(ok?1:0);
-  updateScore();
-  document.querySelectorAll('.ch-btn').forEach((b,j)=>{
-    if(j===scen.ci) b.classList.add('correct');
-    else if(j===i && !ok) b.classList.add('wrong');
-    else b.classList.add('disabled');
-  });
+  GS.attempts++;
+  const btns = document.querySelectorAll('.ch-btn');
   const gp = document.getElementById('gate-prompt');
   gp.style.display = 'block';
   if(ok){
+    GS.answered = true;
+    GS.scores.push(attemptScore(1));
+    logRow('correct','');
+    updateScore();
+    btns.forEach((b,j)=>{ if(j===scen.ci) b.classList.add('correct'); else b.classList.add('disabled'); });
     gatewayActive = true;
     gp.style.borderColor = 'rgba(56,189,248,.5)';
     document.getElementById('gp-text').textContent = '✓ Gateway Unlocked';
     document.getElementById('gp-hint').textContent = 'Steer through to advance';
+    hapticBuzz(true);
+    setTimeout(()=>showFeedback(true, scen), 900);
   } else {
+    // Unlimited retries. The wrong moment is the teaching moment (Section 3).
+    logRow('wrong_attempt', 'option_'+String.fromCharCode(65+i));
+    btns[i].classList.add('wrong');
     gp.style.borderColor = 'rgba(239,68,68,.5)';
-    document.getElementById('gp-text').textContent = '✗ Gateway Locked';
-    document.getElementById('gp-hint').textContent = 'Review the physics below';
+    document.getElementById('gp-text').textContent = '✗ Gateway Locked — Attempt '+GS.attempts;
+    document.getElementById('gp-hint').textContent = 'Think it through, then try again';
+    hapticBuzz(false);
+    setTimeout(()=>showCorrective(scen, i), 700);
   }
-  hapticBuzz(ok);
-  if(ok) AudioSys.correct(); else AudioSys.wrong();
-  setTimeout(()=>showFeedback(ok, scen), 900);
+}
+
+// Corrective modal on wrong answer: name what they chose, correct the model, let them retry.
+function showCorrective(scen, chosen){
+  document.getElementById('fb-wrap').classList.add('on');
+  document.getElementById('fb-ico').textContent = '↺';
+  document.getElementById('fb-ico').className = 'fbv-ico no';
+  document.getElementById('fb-verdict').textContent = 'Not this one — attempt '+GS.attempts;
+  const oe = document.getElementById('fb-outcome');
+  oe.className = 'fb-out fo-risky';
+  oe.textContent = 'YOU CHOSE: '+scen.opts[chosen].toUpperCase().slice(0,40);
+  document.getElementById('fb-chips').innerHTML = '';
+  document.getElementById('fb-text').textContent = 'Think about the forces in this situation before answering again. ' +
+    (GS.attempts>=3 ? 'Hint: '+scen.fb : 'Look at the live conditions panel — which parameter crosses a threshold?');
+  document.getElementById('fb-physics').textContent = GS.attempts>=3 ? scen.phy : 'The physics explanation unlocks after your next attempt if needed.';
+  const nb = document.getElementById('next-btn');
+  nb.textContent = '↺ Try Again';
+  nb.onclick = ()=>{ document.getElementById('fb-wrap').classList.remove('on'); document.getElementById('gate-prompt').style.display='none'; };
 }
 
 function hapticBuzz(ok){
@@ -1989,7 +1971,7 @@ function showFeedback(ok, scen){
   document.getElementById('fb-wrap').classList.add('on');
   document.getElementById('fb-ico').textContent = ok?'✓':'✗';
   document.getElementById('fb-ico').className = 'fbv-ico '+(ok?'ok':'no');
-  document.getElementById('fb-verdict').textContent = ok?'Correct!':'Incorrect';
+  document.getElementById('fb-verdict').textContent = ok?(GS.attempts>1?`Solved — attempt ${GS.attempts}`:'Solved on the first try'):'Incorrect';
   const om = {safe:['fo-safe','✓ SAFE OUTCOME'],risky:['fo-risky','⚠ RISKY OUTCOME'],unsafe:['fo-unsafe','✗ UNSAFE OUTCOME']};
   const [cls,lbl] = om[scen.out];
   const oe = document.getElementById('fb-outcome');
@@ -2020,27 +2002,33 @@ function nextScenario(){
   document.getElementById('fb-wrap').classList.remove('on');
   const n = GS.idx+1;
   if(n >= GS.gd.scenarios.length) transitionTo(showResults);
-  else transitionTo(()=>loadScenario(n));
+  else {
+    const nx = GS.gd.scenarios[n];
+    const obj = (nx.lab && nx.objective) ? nx.objective : (GS.gd.topic + (GS.gd.prime ? ' — ' + GS.gd.prime : ''));
+    transitionTo(()=>loadScenario(n), obj);
+  }
 }
 
 function showResults(){
   showScreen('s-res');
-  const c = GS.scores.filter(s=>s===1).length, t = GS.scores.length;
-  const mean = t?c/t:0;
+  const t = GS.gd.scenarios.length;
+  const solved = GS.scores.length;
+  const proc = GS.scores.length ? GS.scores.reduce((a,b)=>a+b,0)/GS.scores.length : 0;
+  const attRows = LOG.filter(r=>r.grade===GS.grade && r.outcome!=='wrong_attempt' && r.outcome!=='swamped');
+  const avgAtt = attRows.length ? (attRows.reduce((a,r)=>a+r.attempts,0)/attRows.length) : 0;
   let interp, icon;
-  if(mean>=.8){interp='Highly Accurate';icon='🏆';}
-  else if(mean>=.6){interp='Moderately Accurate';icon='🎯';}
-  else if(mean>=.4){interp='Slightly Accurate';icon='📚';}
-  else {interp='Needs More Practice';icon='💪';}
+  if(proc>=.85 && solved===t){interp='Strong understanding — solved with few attempts';icon='🏆';}
+  else if(proc>=.65){interp='Good understanding — some concepts took retries';icon='🎯';}
+  else if(solved===t){interp='Completed — review the concepts that took many attempts';icon='📚';}
+  else {interp='In progress';icon='💪';}
   document.getElementById('res-icon').textContent = icon;
-  document.getElementById('res-grade').textContent = `${GS.gd.name} · ${GS.gd.topic}`;
-  document.getElementById('res-big').textContent = mean.toFixed(2);
-  document.getElementById('res-interp').textContent = interp;
+  document.getElementById('res-grade').textContent = `${GS.gd.name} · ${GS.gd.topic} · ${GS.gd.melc||''}`;
+  document.getElementById('res-big').textContent = `${solved} / ${t}`;
+  document.getElementById('res-interp').textContent = 'scenarios solved — ' + interp;
   document.getElementById('res-breakdown').innerHTML = `
-    <div class="rbd"><div class="rbd-n" style="color:#4ade80">${c}</div><div class="rbd-l">Correct</div></div>
-    <div class="rbd"><div class="rbd-n" style="color:#f87171">${t-c}</div><div class="rbd-l">Incorrect</div></div>
-    <div class="rbd"><div class="rbd-n">${t}</div><div class="rbd-l">Total</div></div>
-    <div class="rbd"><div class="rbd-n" style="font-size:.95rem">${(mean*100).toFixed(0)}%</div><div class="rbd-l">Accuracy</div></div>`;
+    <div class="rbd"><div class="rbd-n" style="color:#4ade80">${(proc*100).toFixed(0)}%</div><div class="rbd-l">Process score</div></div>
+    <div class="rbd"><div class="rbd-n">${avgAtt?avgAtt.toFixed(1):'–'}</div><div class="rbd-l">Avg attempts</div></div>
+    <div class="rbd"><div class="rbd-n">${LOG.filter(r=>r.grade===GS.grade).length}</div><div class="rbd-l">Logged events</div></div>`;
 }
 function replayGrade(){ transitionTo(()=>startGrade(GS.grade)); }
 function goMenu(){
@@ -2051,10 +2039,14 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
 }
-function transitionTo(fn){
+function transitionTo(fn, objText){
   const t = document.getElementById('trans');
+  if(objText){
+    t.innerHTML = '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center"><div style="font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:#38bdf8;margin-bottom:.7rem">Objective</div><div style="font-size:1rem;max-width:420px;line-height:1.55;color:#fff">'+objText+'</div></div>';
+  } else t.innerHTML = '';
   t.style.opacity = '1';
-  setTimeout(()=>{ fn(); setTimeout(()=>t.style.opacity='0',100); }, 400);
+  const dwell = objText ? 1400 : 400;
+  setTimeout(()=>{ fn(); setTimeout(()=>{t.style.opacity='0';},100); }, dwell);
 }
 
 // ═══ JOYSTICK + CONTROLS ═══
@@ -2087,18 +2079,14 @@ function initControls(){
   document.addEventListener('touchmove', move, {passive:false});
   document.addEventListener('touchend', end);
 
-  const bootAudio = ()=>{ AudioSys.init(); AudioSys.resume(); };
-  document.addEventListener('pointerdown', bootAudio, {once:false});
-  document.addEventListener('keydown', bootAudio, {once:false});
-  document.getElementById('snd-btn').onclick = (e)=>{
-    AudioSys.enabled = !AudioSys.enabled;
-    e.target.textContent = AudioSys.enabled ? '🔊' : '🔇';
-    if(!AudioSys.enabled) AudioSys.stopAmb();
-    AudioSys.click();
-  };
-  document.getElementById('zoom-in').onclick = ()=>{ zoomLevel = Math.min(2.4, zoomLevel+.25); AudioSys.click(); if(navigator.vibrate) navigator.vibrate(15); };
-  document.getElementById('zoom-out').onclick = ()=>{ zoomLevel = Math.max(.6, zoomLevel-.25); AudioSys.click(); if(navigator.vibrate) navigator.vibrate(15); };
+  document.getElementById('zoom-in').onclick = ()=>{ zoomLevel = Math.min(2.4, zoomLevel+.25); if(navigator.vibrate) navigator.vibrate(15); };
+  document.getElementById('zoom-out').onclick = ()=>{ zoomLevel = Math.max(.6, zoomLevel-.25); if(navigator.vibrate) navigator.vibrate(15); };
   document.getElementById('cam-reset').onclick = ()=>{ cam.yaw = 0; cam.pitch = 0; zoomLevel = 1; if(navigator.vibrate) navigator.vibrate(15); };
+  document.getElementById('q-btn').onclick = ()=>{
+    qTier = TIERS[(TIERS.indexOf(qTier)+1)%3];
+    applyTier();
+    if(navigator.vibrate) navigator.vibrate(15);
+  };
 
   // Keyboard
   const keys = {};
@@ -2136,13 +2124,14 @@ function setLoad(p, tip){
 }
 async function init(){
   initThree();
+  applyTier();
   initControls();
-  setLoad(25,'Compiling water shaders...');
+  setLoad(25,'Building the river...');
   await new Promise(r=>setTimeout(r,250));
-  setLoad(55,'Generating procedural textures...');
+  setLoad(55,'Placing the village...');
   await new Promise(r=>setTimeout(r,250));
   buildMenuBackground();
-  setLoad(85,'Loading scenario database...');
+  setLoad(85,'Preparing your scenarios...');
   await new Promise(r=>setTimeout(r,250));
   setLoad(100,'Ready!');
   await new Promise(r=>setTimeout(r,350));
